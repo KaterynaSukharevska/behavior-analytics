@@ -1,0 +1,68 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fb;
+  color: #162033;
+}
+
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.hero p {
+  margin-top: 0.75rem;
+  line-height: 1.6;
+  color: #3d4960;
+}
+
+.status-card {
+  margin-top: 2rem;
+  background: #ffffff;
+  border: 1px solid #dbe3f0;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.status-card h2 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.125rem;
+}
+
+.status-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.status-card li {
+  margin: 0.4rem 0;
+}
+
+.status-card a {
+  color: #1e56d9;
+  text-decoration: none;
+}
+
+.status-card a:hover {
+  text-decoration: underline;
+}
+
+.note {
+  margin-top: 1rem;
+  color: #55627b;
+}

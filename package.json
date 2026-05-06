@@ -1,0 +1,14 @@
+{
+  "name": "behavior_analytics",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "echo \"Dev scripts will be added later\"",
+    "build": "echo \"Build scripts will be added later\"",
+    "test": "echo \"Test scripts will be added later\"",
+    "typecheck": "echo \"Typecheck scripts will be added later\""
+  }
+}
