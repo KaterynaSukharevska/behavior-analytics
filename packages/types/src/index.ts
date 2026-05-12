@@ -106,5 +106,6 @@ export interface IngestEventsRequest {
 }
 
 export interface IngestEventsResponse {
+  ok: boolean;
   accepted: number;
 }
