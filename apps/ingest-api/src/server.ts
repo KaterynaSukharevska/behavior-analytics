@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import { IngestEventsRequestSchema } from "@behavior-analytics/analytics-core";
 
 const port = Number(process.env.INGEST_API_PORT ?? 4000);
 
@@ -16,6 +17,22 @@ app.get("/api/health", async () => {
   return {
     ok: true,
     service: "ingest-api",
+  };
+});
+
+app.post("/api/events", async (request, reply) => {
+  const parsed = IngestEventsRequestSchema.safeParse(request.body);
+
+  if (!parsed.success) {
+    return reply.status(400).send({
+      ok: false,
+      error: "INVALID_ANALYTICS_PAYLOAD",
+    });
+  }
+
+  return {
+    ok: true,
+    accepted: parsed.data.events.length,
   };
 });
 
