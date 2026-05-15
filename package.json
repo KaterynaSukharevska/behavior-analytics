@@ -9,6 +9,12 @@
     "dev": "echo \"Dev scripts will be added later\"",
     "build": "echo \"Build scripts will be added later\"",
     "test": "echo \"Test scripts will be added later\"",
-    "typecheck": "echo \"Typecheck scripts will be added later\""
+    "typecheck": "echo \"Typecheck scripts will be added later\"",
+    "db:validate": "prisma validate",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate"
+  },
+  "devDependencies": {
+    "prisma": "^6.19.0"
   }
 }
