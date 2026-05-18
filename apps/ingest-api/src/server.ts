@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { IngestEventsRequestSchema } from "@behavior-analytics/analytics-core";
+import { saveAnalyticsEvents } from "./db/save-analytics-events.js";
 
 const port = Number(process.env.INGEST_API_PORT ?? 4000);
 
@@ -30,10 +31,21 @@ app.post("/api/events", async (request, reply) => {
     });
   }
 
-  return {
-    ok: true,
-    accepted: parsed.data.events.length,
-  };
+  try {
+    const accepted = await saveAnalyticsEvents(parsed.data.events);
+
+    return {
+      ok: true,
+      accepted,
+    };
+  } catch (error) {
+    request.log.error({ err: error }, "Failed to persist analytics events");
+
+    return reply.status(500).send({
+      ok: false,
+      error: "EVENT_PERSISTENCE_FAILED",
+    });
+  }
 });
 
 const start = async (): Promise<void> => {

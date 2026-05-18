@@ -85,7 +85,7 @@ Prisma is the chosen DB toolkit for beginner-friendly readability, portfolio cla
 - `AnalyticsEvent` model added to root `prisma/schema.prisma`
 - Migration `20260518085508_add_analytics_event` creates `analytics_events` table
 - Prisma Client regenerated at repo root
-- `POST /api/events` still validates only — persistence is the next step
+- `POST /api/events` persists validated events to `analytics_events` (Phase 3.3)
 
 ---
 
@@ -198,7 +198,7 @@ Selected for:
 
 Migration: `prisma/migrations/20260518085508_add_analytics_event/`
 
-**The ingest API is not wired to this table yet.**
+**Phase 3.3:** ingest API writes validated events to this table via Prisma.
 
 ---
 
@@ -231,7 +231,7 @@ npm run db:migrate
 npm run db:generate
 ```
 
-The `analytics_events` table exists after Phase 3.2. Persistence in `POST /api/events` is not implemented yet.
+The `analytics_events` table exists. Phase 3.3 persists validated ingest payloads into this table.
 
 ---
 
@@ -274,9 +274,13 @@ Response:
 }
 ```
 
-## Important limitation
+## Persistence (Phase 3.3)
 
-`POST /api/events` **validates only** — it does **not** save events to PostgreSQL yet.
+After Zod validation, events are saved to `analytics_events` via Prisma `createMany`.
+
+- Success: `{ "ok": true, "accepted": number }` (unchanged shape)
+- Invalid payload: `400` with `{ "ok": false, "error": "INVALID_ANALYTICS_PAYLOAD" }`
+- DB failure: `500` with `{ "ok": false, "error": "EVENT_PERSISTENCE_FAILED" }` (no payload logged)
 
 CORS allows `http://localhost:3000` and `http://localhost:3001`.
 
@@ -288,8 +292,8 @@ CORS allows `http://localhost:3000` and `http://localhost:3001`.
 
 - [x] `AnalyticsEvent` Prisma model (Phase 3.2)
 - [x] Migration for events table (`20260518085508_add_analytics_event`)
-- [ ] Raw event persistence in `POST /api/events` (Phase 3.3)
-- [ ] Prisma Client usage inside ingest-api
+- [x] Raw event persistence in `POST /api/events` (Phase 3.3)
+- [x] Prisma Client usage inside ingest-api
 - [ ] Request size limits
 - [ ] Rate limiting
 - [ ] Auth and project/site ownership checks
@@ -314,15 +318,20 @@ CORS allows `http://localhost:3000` and `http://localhost:3001`.
 
 ## Phase 3.3 — Persist validated events in `POST /api/events`
 
-**Goal:** After Zod validation, insert each event into `analytics_events` via Prisma Client.
+**Status: done.**
 
-**Expected direction:**
+## Next planned step — Phase 3.4 (suggested)
 
-- Add a small Prisma client helper in `apps/ingest-api` (or shared DB module)
-- Map validated `AnalyticsEventPayload` fields to `AnalyticsEvent` columns + `payload` JSON
-- Keep existing success/error response shapes
-- Use a transaction or `createMany` for batch ingest
-- Do not add auth, rate limits, or reporting yet
+**Goal:** Harden ingest API boundaries before dashboard work.
+
+**Candidates (pick one small task at a time):**
+
+- request body size limit on `POST /api/events`
+- graceful Prisma disconnect on server shutdown
+- ingest API integration test with a test database or mocked Prisma
+- remove or align legacy `apps/ingest-api/prisma/` if it confuses local workflow
+
+Do not add auth, reporting, or dashboard wiring in the same step.
 
 ---
 
