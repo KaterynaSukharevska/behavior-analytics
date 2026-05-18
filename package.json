@@ -12,7 +12,8 @@
     "typecheck": "echo \"Typecheck scripts will be added later\"",
     "db:validate": "prisma validate",
     "db:migrate": "prisma migrate dev",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "db:status": "prisma migrate status"
   },
   "devDependencies": {
     "prisma": "^6.19.0"

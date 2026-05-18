@@ -177,13 +177,14 @@ Selected for:
 
 ## What was set up
 
-- **Schema location:** `prisma/schema.prisma` at the **repository root** (default Prisma layout)
+- **Schema location:** `prisma/schema.prisma` at the **repository root** only (no app-local Prisma folder)
 - **Provider:** PostgreSQL
 - **Connection:** `DATABASE_URL` from project root `.env` (see `.env.example`)
 - **Root scripts** in `package.json`:
-  - `npm run db:validate` → `prisma validate`
-  - `npm run db:migrate` → `prisma migrate dev`
-  - `npm run db:generate` → `prisma generate`
+  - `npm run db:validate` → `prisma validate` (run from repo root)
+  - `npm run db:migrate` → `prisma migrate dev` (run from repo root)
+  - `npm run db:generate` → `prisma generate` (run from repo root)
+  - `npm run db:status` → `prisma migrate status` (run from repo root)
 - **Prisma** and **@prisma/client** available for the monorepo (ingest-api also lists client dependency)
 
 ## Current root schema (Phase 3.2)
@@ -329,8 +330,6 @@ CORS allows `http://localhost:3000` and `http://localhost:3001`.
 - request body size limit on `POST /api/events`
 - graceful Prisma disconnect on server shutdown
 - ingest API integration test with a test database or mocked Prisma
-- remove or align legacy `apps/ingest-api/prisma/` if it confuses local workflow
-
 Do not add auth, reporting, or dashboard wiring in the same step.
 
 ---
