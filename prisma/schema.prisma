@@ -6,3 +6,25 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+/// One row per ingested analytics event. `payload` holds the full validated event JSON.
+model AnalyticsEvent {
+  id         String   @id @default(cuid())
+  eventId    String
+  siteId     String
+  sessionId  String
+  eventType  String
+  timestamp  DateTime
+  pageUrl    String?
+  path       String?
+  deviceType String?
+  payload    Json
+  createdAt  DateTime @default(now())
+
+  @@index([siteId])
+  @@index([sessionId])
+  @@index([eventType])
+  @@index([timestamp])
+  @@index([createdAt])
+  @@map("analytics_events")
+}

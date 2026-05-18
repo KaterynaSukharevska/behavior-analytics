@@ -78,6 +78,15 @@ Handoff doc: `docs/phase-2-context.md`
 
 Prisma is the chosen DB toolkit for beginner-friendly readability, portfolio clarity, and interview explainability.
 
+## Phase 3.2 — AnalyticsEvent Prisma Model
+
+**Status: done.**
+
+- `AnalyticsEvent` model added to root `prisma/schema.prisma`
+- Migration `20260518085508_add_analytics_event` creates `analytics_events` table
+- Prisma Client regenerated at repo root
+- `POST /api/events` still validates only — persistence is the next step
+
 ---
 
 # 3. Current Technical State
@@ -177,28 +186,19 @@ Selected for:
   - `npm run db:generate` → `prisma generate`
 - **Prisma** and **@prisma/client** available for the monorepo (ingest-api also lists client dependency)
 
-## Current root schema
+## Current root schema (Phase 3.2)
 
-Phase 3.1 intentionally contains **only** generator and datasource — no application models yet:
+`AnalyticsEvent` model maps to table `analytics_events`:
 
-```prisma
-generator client {
-  provider = "prisma-client-js"
-}
+- Row id: `cuid()`
+- Denormalized query columns: `eventId`, `siteId`, `sessionId`, `eventType`, `timestamp`, `pageUrl`, `path`, `deviceType`
+- Full validated event JSON in `payload`
+- `createdAt` for ingest-time ordering
+- Indexes on `siteId`, `sessionId`, `eventType`, `timestamp`, `createdAt`
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
+Migration: `prisma/migrations/20260518085508_add_analytics_event/`
 
-## Verification status (Phase 3.1)
-
-- `prisma validate` — passes
-- `prisma migrate dev` — runs successfully; database reported **already in sync**
-- `prisma generate` — Prisma Client generated successfully
-
-**Phase 3.1 does not wire the ingest API to the database yet.**
+**The ingest API is not wired to this table yet.**
 
 ---
 
@@ -231,7 +231,7 @@ npm run db:migrate
 npm run db:generate
 ```
 
-After Phase 3.2, expect a new migration that creates the analytics events table. Until then, the root schema has no models and persistence is not implemented in the API.
+The `analytics_events` table exists after Phase 3.2. Persistence in `POST /api/events` is not implemented yet.
 
 ---
 
@@ -286,9 +286,9 @@ CORS allows `http://localhost:3000` and `http://localhost:3001`.
 
 ## Database / backend
 
-- [ ] `AnalyticsEvent` Prisma model (Phase 3.2)
-- [ ] Migration for events table
-- [ ] Raw event persistence in `POST /api/events`
+- [x] `AnalyticsEvent` Prisma model (Phase 3.2)
+- [x] Migration for events table (`20260518085508_add_analytics_event`)
+- [ ] Raw event persistence in `POST /api/events` (Phase 3.3)
 - [ ] Prisma Client usage inside ingest-api
 - [ ] Request size limits
 - [ ] Rate limiting
@@ -312,20 +312,17 @@ CORS allows `http://localhost:3000` and `http://localhost:3001`.
 
 # 8. Next Planned Step
 
-## Phase 3.2 — Add `AnalyticsEvent` Prisma model
+## Phase 3.3 — Persist validated events in `POST /api/events`
 
-**Goal:** Define the database model for stored analytics events at the root `prisma/schema.prisma`, create a migration, regenerate the client.
+**Goal:** After Zod validation, insert each event into `analytics_events` via Prisma Client.
 
-**Expected direction (not final spec — implement in 3.2 task):**
+**Expected direction:**
 
-- One row per ingested event
-- Columns aligned with shared contracts (`site_id`, `session_id`, `event_id`, `event_type`, `timestamp`, etc.)
-- JSON column for full validated event payload where useful
-- Indexes on common query fields (`site_id`, `session_id`, `event_type`)
-
-**Do not implement Phase 3.2 in the same task as creating this context file.**
-
-After Phase 3.2, a follow-up phase will connect `POST /api/events` to Prisma persistence.
+- Add a small Prisma client helper in `apps/ingest-api` (or shared DB module)
+- Map validated `AnalyticsEventPayload` fields to `AnalyticsEvent` columns + `payload` JSON
+- Keep existing success/error response shapes
+- Use a transaction or `createMany` for batch ingest
+- Do not add auth, rate limits, or reporting yet
 
 ---
 
