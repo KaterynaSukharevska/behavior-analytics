@@ -297,6 +297,7 @@ CORS allows `http://localhost:3000` and `http://localhost:3001`.
 - [x] Raw event persistence in `POST /api/events` (Phase 3.3)
 - [x] Prisma Client usage inside ingest-api
 - [x] Request size limits (Phase 3.4 — 256 KB body limit)
+- [x] Graceful Prisma shutdown on ingest-api close (Phase 3.5)
 - [ ] Rate limiting
 - [ ] Auth and project/site ownership checks
 - [ ] Reporting / query endpoints for dashboard
@@ -329,13 +330,18 @@ CORS allows `http://localhost:3000` and `http://localhost:3001`.
 - Ingest API `bodyLimit`: **256 KB** (Fastify default is 1 MiB)
 - Oversized payloads: `413` with `{ "ok": false, "error": "PAYLOAD_TOO_LARGE" }`
 
+## Phase 3.5 — Graceful Prisma shutdown
+
+**Status: done.**
+
+- `onClose` hook calls `prisma.$disconnect()` via `disconnectPrisma()`
+- `SIGINT` / `SIGTERM` call `app.close()` so local Ctrl+C shuts down cleanly
+
 ## Next planned step (suggested)
 
-**Goal:** Harden ingest API boundaries before dashboard work.
+**Goal:** Start tracker SDK or dashboard integration.
 
 **Candidates (pick one small task at a time):**
-
-- graceful Prisma disconnect on server shutdown
 - ingest API integration test with a test database or mocked Prisma
 Do not add auth, reporting, or dashboard wiring in the same step.
 

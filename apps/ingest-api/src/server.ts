@@ -1,6 +1,7 @@
 import Fastify, { type FastifyError } from "fastify";
 import cors from "@fastify/cors";
 import { IngestEventsRequestSchema } from "@behavior-analytics/analytics-core";
+import { disconnectPrisma } from "./db/prisma.js";
 import { saveAnalyticsEvents } from "./db/save-analytics-events.js";
 
 const port = Number(process.env.INGEST_API_PORT ?? 4000);
@@ -22,6 +23,10 @@ app.setErrorHandler((error: FastifyError, request, reply) => {
   }
 
   return reply.send(error);
+});
+
+app.addHook("onClose", async () => {
+  await disconnectPrisma();
 });
 
 await app.register(cors, {
@@ -62,6 +67,24 @@ app.post("/api/events", async (request, reply) => {
     });
   }
 });
+
+const shutdown = async (signal: string): Promise<void> => {
+  app.log.info({ signal }, "Shutting down ingest-api");
+
+  try {
+    await app.close();
+    process.exit(0);
+  } catch (error) {
+    app.log.error({ err: error }, "Failed to shut down ingest-api");
+    process.exit(1);
+  }
+};
+
+for (const signal of ["SIGINT", "SIGTERM"] as const) {
+  process.on(signal, () => {
+    void shutdown(signal);
+  });
+}
 
 const start = async (): Promise<void> => {
   try {
