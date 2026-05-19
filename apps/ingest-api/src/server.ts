@@ -1,12 +1,27 @@
-import Fastify from "fastify";
+import Fastify, { type FastifyError } from "fastify";
 import cors from "@fastify/cors";
 import { IngestEventsRequestSchema } from "@behavior-analytics/analytics-core";
 import { saveAnalyticsEvents } from "./db/save-analytics-events.js";
 
 const port = Number(process.env.INGEST_API_PORT ?? 4000);
 
+/** Fastify default bodyLimit is 1 MiB (1_048_576). Tighter limit for analytics ingest. */
+const INGEST_BODY_LIMIT_BYTES = 256 * 1024;
+
 const app = Fastify({
   logger: true,
+  bodyLimit: INGEST_BODY_LIMIT_BYTES,
+});
+
+app.setErrorHandler((error: FastifyError, request, reply) => {
+  if (error.code === "FST_ERR_CTP_BODY_TOO_LARGE") {
+    return reply.status(413).send({
+      ok: false,
+      error: "PAYLOAD_TOO_LARGE",
+    });
+  }
+
+  return reply.send(error);
 });
 
 await app.register(cors, {

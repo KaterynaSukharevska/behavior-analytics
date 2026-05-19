@@ -282,6 +282,7 @@ After Zod validation, events are saved to `analytics_events` via Prisma `createM
 - Success: `{ "ok": true, "accepted": number }` (unchanged shape)
 - Invalid payload: `400` with `{ "ok": false, "error": "INVALID_ANALYTICS_PAYLOAD" }`
 - DB failure: `500` with `{ "ok": false, "error": "EVENT_PERSISTENCE_FAILED" }` (no payload logged)
+- Body too large: `413` with `{ "ok": false, "error": "PAYLOAD_TOO_LARGE" }` (256 KB limit)
 
 CORS allows `http://localhost:3000` and `http://localhost:3001`.
 
@@ -295,7 +296,7 @@ CORS allows `http://localhost:3000` and `http://localhost:3001`.
 - [x] Migration for events table (`20260518085508_add_analytics_event`)
 - [x] Raw event persistence in `POST /api/events` (Phase 3.3)
 - [x] Prisma Client usage inside ingest-api
-- [ ] Request size limits
+- [x] Request size limits (Phase 3.4 — 256 KB body limit)
 - [ ] Rate limiting
 - [ ] Auth and project/site ownership checks
 - [ ] Reporting / query endpoints for dashboard
@@ -321,13 +322,19 @@ CORS allows `http://localhost:3000` and `http://localhost:3001`.
 
 **Status: done.**
 
-## Next planned step — Phase 3.4 (suggested)
+## Phase 3.4 — Request body size limit
+
+**Status: done.**
+
+- Ingest API `bodyLimit`: **256 KB** (Fastify default is 1 MiB)
+- Oversized payloads: `413` with `{ "ok": false, "error": "PAYLOAD_TOO_LARGE" }`
+
+## Next planned step (suggested)
 
 **Goal:** Harden ingest API boundaries before dashboard work.
 
 **Candidates (pick one small task at a time):**
 
-- request body size limit on `POST /api/events`
 - graceful Prisma disconnect on server shutdown
 - ingest API integration test with a test database or mocked Prisma
 Do not add auth, reporting, or dashboard wiring in the same step.
