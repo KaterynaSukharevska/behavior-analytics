@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ConversionLink } from "../../components/conversion-link";
+import { CONVERSION_NAMES } from "../../lib/conversion-names";
 
 type Plan = {
   name: string;
@@ -61,13 +63,14 @@ export default function PricingPage() {
           >
             Review features
           </Link>
-          <Link
+          <ConversionLink
             href="/contact"
             className="btn btnPrimary"
             data-analytics-id="pricing-cta-to-contact-primary"
+            conversionName={CONVERSION_NAMES.PRICING_CTA_CLICKED}
           >
             Contact sales
-          </Link>
+          </ConversionLink>
         </div>
       </section>
 

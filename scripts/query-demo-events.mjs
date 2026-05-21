@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 /** Usage: node scripts/query-demo-events.mjs [eventType]
- *  Examples: click | scroll_depth | page_view
+ *  Examples: click | scroll_depth | page_view | conversion
  */
 const eventType = process.argv[2];
 

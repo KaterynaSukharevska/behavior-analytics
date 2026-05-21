@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ContactFormActions } from "../../components/contact-form-actions";
 
 export default function ContactPage() {
   return (
@@ -72,30 +72,7 @@ export default function ContactPage() {
             />
           </div>
 
-          <div className="heroActions" aria-label="Form actions">
-            <button
-              type="button"
-              className="btn btnPrimary"
-              data-analytics-id="contact-cta-primary-ui-only"
-              aria-disabled="true"
-            >
-              Request demo (disabled)
-            </button>
-            <Link
-              href="/thank-you"
-              className="btn"
-              data-analytics-id="contact-cta-conversion-to-thank-you"
-            >
-              Continue to thank you
-            </Link>
-            <Link
-              href="/pricing"
-              className="btn"
-              data-analytics-id="contact-cta-back-to-pricing"
-            >
-              Revisit pricing
-            </Link>
-          </div>
+          <ContactFormActions />
         </div>
       </section>
     </>

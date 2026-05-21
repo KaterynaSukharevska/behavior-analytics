@@ -1,49 +1,40 @@
 import type {
+  ConversionEvent,
   IngestEventsRequest,
-  PageViewEvent,
 } from "@behavior-analytics/types";
-import { startClickTracking } from "./click-tracking";
-import { startScrollTracking } from "./scroll-tracking";
-import { requireTrackerConfig, setTrackerConfig, type TrackerConfig } from "./config";
+import { requireTrackerConfig } from "./config";
+import { createId } from "./create-id";
 import { getDeviceType } from "./device";
 import { getOrCreateSessionId } from "./session";
-import { createId } from "./create-id";
 import { sendIngestRequest } from "./transport";
 
-export type { TrackerConfig } from "./config";
-export { startClickTracking } from "./click-tracking";
-export { startScrollTracking } from "./scroll-tracking";
-export {
-  trackConversion,
-  type ConversionOptionalData,
-} from "./conversion-tracking";
-
-export type PageViewOptionalData = Partial<
+export type ConversionOptionalData = Partial<
   Pick<
-    PageViewEvent,
+    ConversionEvent,
     | "utm_source"
     | "utm_medium"
     | "utm_campaign"
-    | "viewport_width"
-    | "viewport_height"
+    | "conversion_value"
     | "referrer"
     | "path"
     | "page_url"
   >
 >;
 
-export function init(config: TrackerConfig): void {
-  setTrackerConfig(config);
+function normalizeConversionName(conversionName: string): string {
+  const trimmed = conversionName.trim();
 
-  if (typeof window !== "undefined") {
-    startClickTracking();
-    startScrollTracking();
+  if (!trimmed) {
+    throw new Error("conversionName is required");
   }
+
+  return trimmed;
 }
 
-function buildPageViewEvent(
-  optionalData?: PageViewOptionalData,
-): PageViewEvent {
+function buildConversionEvent(
+  conversionName: string,
+  optionalData?: ConversionOptionalData,
+): ConversionEvent {
   const config = requireTrackerConfig();
   const pageUrl =
     optionalData?.page_url ??
@@ -58,22 +49,16 @@ function buildPageViewEvent(
       ? document.referrer
       : undefined);
 
-  const viewportWidth =
-    optionalData?.viewport_width ??
-    (typeof window !== "undefined" ? window.innerWidth : undefined);
-  const viewportHeight =
-    optionalData?.viewport_height ??
-    (typeof window !== "undefined" ? window.innerHeight : undefined);
-
-  const event: PageViewEvent = {
+  const event: ConversionEvent = {
     event_id: createId(),
-    event_type: "page_view",
+    event_type: "conversion",
     site_id: config.siteId,
     session_id: getOrCreateSessionId(),
     timestamp: new Date().toISOString(),
     page_url: pageUrl,
     path,
     device_type: getDeviceType(),
+    conversion_name: conversionName,
   };
 
   if (referrer !== undefined) {
@@ -92,26 +77,24 @@ function buildPageViewEvent(
     event.utm_campaign = optionalData.utm_campaign;
   }
 
-  if (viewportWidth !== undefined) {
-    event.viewport_width = viewportWidth;
-  }
-
-  if (viewportHeight !== undefined) {
-    event.viewport_height = viewportHeight;
+  if (optionalData?.conversion_value !== undefined) {
+    event.conversion_value = optionalData.conversion_value;
   }
 
   return event;
 }
 
-export async function trackPageView(
-  optionalData?: PageViewOptionalData,
+export async function trackConversion(
+  conversionName: string,
+  optionalData?: ConversionOptionalData,
 ): Promise<void> {
   if (typeof window === "undefined") {
     return;
   }
 
+  const normalizedName = normalizeConversionName(conversionName);
   const config = requireTrackerConfig();
-  const event = buildPageViewEvent(optionalData);
+  const event = buildConversionEvent(normalizedName, optionalData);
 
   const body: IngestEventsRequest = {
     site_id: config.siteId,

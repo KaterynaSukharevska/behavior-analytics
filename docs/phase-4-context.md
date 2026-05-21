@@ -222,6 +222,7 @@ npm run db:generate
 - Internal imports use extensionless paths for Next.js bundler compatibility
 - **Click tracking** (Phase 4.3): `startClickTracking()` runs automatically from `init()`; only elements with `data-analytics-id` are tracked
 - **Scroll depth** (Phase 4.4): `startScrollTracking()` runs automatically from `init()`; milestones 25/50/75/100 once per path
+- **Conversions** (Phase 4.5): `trackConversion(name)` — explicit names only; no form values
 
 ## Other apps
 
@@ -298,6 +299,16 @@ The tracker **must** respect:
 - Milestone state resets when `window.location.pathname` changes
 - `depth_percent` in payload is the milestone value (25/50/75/100), not a continuous stream
 
+**Conversion behavior (Phase 4.5):**
+
+- Public API: `trackConversion(conversionName, optionalData?)` — caller supplies an explicit safe name
+- Optional `conversion_value` number only; no user text or form fields
+- Demo-site conversion names:
+  - `contact_form_submitted` — contact page “Submit demo request” button (no form data read)
+  - `pricing_cta_clicked` — pricing hero “Contact sales” CTA
+  - `thank_you_page_viewed` — fired when `/thank-you` route loads
+- Payload does **not** include: names, emails, messages, cookies, or `localStorage`
+
 **Implementation discipline for Phase 4:**
 
 - Capture only safe metadata (ids, paths, coarse device type, etc.).
@@ -336,7 +347,7 @@ The tracker **must** respect:
 | **4.2** | Demo-site tracker integration | **Done** — `AnalyticsTracker` in layout; `page_view` on route change; local ingest endpoint |
 | **4.3** | Click tracking | **Done** — auto `startClickTracking()` on `init()`; `data-analytics-id` required; privacy ignores |
 | **4.4** | Scroll depth | **Done** — milestones 25/50/75/100; once per path; throttled scroll handler |
-| **4.5** | Conversion events | CTA / form submit / thank-you conversions with explicit safe names |
+| **4.5** | Conversion events | **Done** — `trackConversion()`; demo-site contact/pricing/thank-you |
 | **4.6** | Tracker docs and smoke checklist | Local setup, privacy rules, manual verification steps |
 
 **Working style:** one small Cursor task per step; do not combine dashboard, auth, or reporting work.
@@ -429,13 +440,31 @@ The tracker **must** respect:
 
 ## Phase 4.5 — Conversion events
 
+**Status: done.**
+
+**Delivered:**
+
+- `packages/tracker/src/conversion-tracking.ts` — `trackConversion(conversionName, optionalData?)`
+- `apps/demo-site/src/lib/conversion-names.ts` — shared conversion name constants
+- Contact: `ContactFormActions` — `contact_form_submitted` on submit button (no form reads)
+- Pricing: `ConversionLink` on primary “Contact sales” — `pricing_cta_clicked`
+- Thank-you: `AnalyticsTracker` — `thank_you_page_viewed` on `/thank-you`
+
+**Local verification (manual):**
+
+1. Start DB, ingest API, demo site
+2. Contact → click **Submit demo request** → Network `POST` with `conversion_name: "contact_form_submitted"`
+3. Pricing → click **Contact sales** → `pricing_cta_clicked`
+4. Open `/thank-you` → `thank_you_page_viewed`
+5. Database: `node scripts/query-demo-events.mjs conversion` — verify `payload.conversion_name`; no PII fields
+
+---
+
+## Phase 4.6 — Tracker docs and smoke checklist
+
 **Status: not started.**
 
-**Goal:** Explicit safe conversion events (CTA, thank-you, etc.).
-
-**Do not do in Phase 4.5:**
-
-- Dashboard or reporting work
+**Goal:** Local setup docs, privacy checklist, manual verification steps.
 
 ---
 
