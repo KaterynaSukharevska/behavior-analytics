@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AnalyticsTracker } from "../components/analytics-tracker";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <AnalyticsTracker />
         <div className="siteShell">
           <header className="header">
             <div className="container headerInner">

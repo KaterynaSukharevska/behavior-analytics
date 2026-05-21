@@ -209,13 +209,19 @@ npm run db:generate
 - Useful attributes already on key elements:
   - `data-analytics-id` on important CTAs and nav links
   - `data-analytics-ignore` on form fields
-- **Tracker SDK is not integrated yet** — no events sent to ingest API
+- **Tracker integrated** (Phase 4.2): `AnalyticsTracker` client component in root layout
+- `init({ siteId: "demo-site", endpoint: "http://localhost:4000/api/events" })`
+- `trackPageView()` on App Router pathname changes (`/`, `/features`, `/pricing`, `/contact`, `/thank-you`)
+- Optional debug: set `NEXT_PUBLIC_BA_TRACKER_DEBUG=1` for `console.debug` page_view logs
 
 ## Tracker package (`packages/tracker`)
 
-- Package directory exists in the monorepo
-- **SDK foundation is not implemented yet** (no `init()`, queue, transport, or event helpers)
-- Demo site does not depend on or load the tracker yet
+- **`init({ siteId, endpoint })` and `trackPageView()` implemented** (Phase 4.1)
+- Session id in `sessionStorage` (`behavior_analytics_session_id`)
+- Direct `fetch` to ingest endpoint; no queue, batching, retry, or offline support yet
+- Internal imports use extensionless paths for Next.js bundler compatibility
+- **Click tracking** (Phase 4.3): `startClickTracking()` runs automatically from `init()`; only elements with `data-analytics-id` are tracked
+- **Scroll depth** (Phase 4.4): `startScrollTracking()` runs automatically from `init()`; milestones 25/50/75/100 once per path
 
 ## Other apps
 
@@ -276,6 +282,22 @@ The tracker **must** respect:
 - selector denylist — later
 - sanitized and shortened element text — later
 
+**Click tracking behavior (Phase 4.3):**
+
+- Document-level `click` listener attached once after `init()` in the browser
+- Events are sent only when the click target resolves to an element with `data-analytics-id` (walk up from `event.target`)
+- Clicks are skipped when the target is inside `data-analytics-ignore`, `data-private`, or sensitive tags (`input`, `textarea`, `select`, `option`, password inputs)
+- Payload includes: `element_tag`, `element_id` (from `data-analytics-id`), `x` / `y` / `normalized_x` / `normalized_y`
+- Payload does **not** include: `element_text_short`, `element_classes`, form values, cookies, or arbitrary DOM text
+
+**Scroll depth behavior (Phase 4.4):**
+
+- `window` `scroll` listener (passive) with 200ms throttle
+- Depth from `scrollY` and `documentElement` scroll metrics only (no DOM text or element content)
+- Milestones: **25, 50, 75, 100** — each sent at most once per `pathname`
+- Milestone state resets when `window.location.pathname` changes
+- `depth_percent` in payload is the milestone value (25/50/75/100), not a continuous stream
+
 **Implementation discipline for Phase 4:**
 
 - Capture only safe metadata (ids, paths, coarse device type, etc.).
@@ -310,10 +332,10 @@ The tracker **must** respect:
 
 | Step | Title | Summary |
 |------|-------|---------|
-| **4.1** | Tracker SDK foundation | `init()`, `siteId` + `endpoint` config, session id storage, event queue, batching, `fetch` transport, `page_view` helper |
-| **4.2** | Demo-site tracker integration | Initialize tracker in demo-site; send `page_view` on route/page load; point at local ingest API; verify row in PostgreSQL |
-| **4.3** | Click tracking | Safe click listener; prefer `data-analytics-id`; ignore `data-analytics-ignore`, form fields, passwords; no raw input values |
-| **4.4** | Scroll depth | Milestone or max-depth events; avoid noisy spam |
+| **4.1** | Tracker SDK foundation | **Done** — `init()`, `siteId` + `endpoint`, session id storage, `fetch` transport, `trackPageView()` |
+| **4.2** | Demo-site tracker integration | **Done** — `AnalyticsTracker` in layout; `page_view` on route change; local ingest endpoint |
+| **4.3** | Click tracking | **Done** — auto `startClickTracking()` on `init()`; `data-analytics-id` required; privacy ignores |
+| **4.4** | Scroll depth | **Done** — milestones 25/50/75/100; once per path; throttled scroll handler |
 | **4.5** | Conversion events | CTA / form submit / thank-you conversions with explicit safe names |
 | **4.6** | Tracker docs and smoke checklist | Local setup, privacy rules, manual verification steps |
 
@@ -325,43 +347,95 @@ The tracker **must** respect:
 
 ## Phase 4.1 — Tracker SDK foundation
 
-**Status: not started.**
+**Status: done.**
 
-**Goal:** Implement the minimal browser SDK in `packages/tracker` so a host app can call `init({ siteId, endpoint })` and enqueue/send batched events, starting with a `page_view` helper.
+**Delivered:**
 
-**Suggested deliverables:**
-
-- `init(config)` with `siteId` and `endpoint` (ingest URL, e.g. `http://localhost:4000/api/events`)
-- Session id generation and persistence (e.g. `sessionStorage`)
-- In-memory event queue with simple batching
-- `fetch` transport posting the shared ingest request shape
-- `trackPageView()` or equivalent aligned with `page_view` contract
-- Package build/export suitable for demo-site import
-
-**Do not do in Phase 4.1:**
-
-- Demo-site wiring (Phase 4.2)
-- Click, scroll, or conversion listeners (Phases 4.3–4.5)
-- Dashboard, auth, rate limits, or Prisma changes
-
-**Files likely to touch (4.1 only):**
-
-- `packages/tracker/**` (new implementation)
-- Possibly `packages/tracker/package.json` if missing
-
-**Files not to touch (4.1):**
-
-- `apps/demo-site`
-- `apps/ingest-api`
-- `apps/dashboard`
-- `prisma/schema.prisma`
-- `packages/types` / `packages/analytics-core` unless a tiny shared export is strictly required (prefer reusing existing contracts as-is)
+- `init({ siteId, endpoint })` and `trackPageView(optionalData?)` in `packages/tracker`
+- Session id via `sessionStorage` key `behavior_analytics_session_id` (`crypto.randomUUID()` with fallback)
+- `POST` ingest body: `{ site_id, events: [ page_view event ] }` per `@behavior-analytics/types` / analytics-core contract
+- Device type from `navigator.userAgent` only (no DOM text or form reads)
+- Direct `fetch`, no queue/batch/retry yet
 
 **Verification after 4.1:**
 
-- Tracker can be built/imported in isolation
-- Unit or manual test that a batched payload matches Zod ingest shape (optional but helpful)
-- No requirement to hit PostgreSQL until Phase 4.2
+- `npm run typecheck --workspace=@behavior-analytics/tracker` passes
+- End-to-end DB check waits for Phase 4.2 (demo-site integration)
+
+---
+
+## Phase 4.2 — Demo-site tracker integration
+
+**Status: done.**
+
+**Delivered:**
+
+- `apps/demo-site/src/components/analytics-tracker.tsx` — client-only `init` + `trackPageView` on `usePathname()` changes
+- `apps/demo-site/src/lib/tracker-config.ts` — `demo-site` site id and local ingest URL
+- Root layout mounts `<AnalyticsTracker />` (no visible UI)
+- `apps/demo-site/next.config.ts` — `transpilePackages` for workspace tracker/types
+
+**Local verification (manual):**
+
+1. `docker compose up -d`
+2. `npm run dev --workspace=@behavior-analytics/ingest-api`
+3. `npm run dev --workspace=@behavior-analytics/demo-site`
+4. Open each route: `/`, `/features`, `/pricing`, `/contact`, `/thank-you`
+5. Browser **Network** tab: `POST http://localhost:4000/api/events` → `{ "ok": true, "accepted": 1 }`
+6. Database: `node scripts/query-demo-events.mjs` (from repo root) or Prisma Studio
+
+**Optional debug:** `NEXT_PUBLIC_BA_TRACKER_DEBUG=1` in `.env.local` for console logs (no UI).
+
+---
+
+## Phase 4.3 — Click tracking
+
+**Status: done.**
+
+**Delivered:**
+
+- `packages/tracker/src/click-privacy.ts` — ignore rules and `data-analytics-id` target resolution
+- `packages/tracker/src/click-tracking.ts` — document listener + `click` ingest payload
+- `init()` calls `startClickTracking()` in the browser (also exported for manual use)
+- Demo-site CTAs/nav already use `data-analytics-id`; form fields use `data-analytics-ignore`
+
+**Local verification (manual):**
+
+1. Start DB, ingest API, and demo site (same as Phase 4.2)
+2. Open http://localhost:3001 and click nav links / hero CTAs / pricing CTAs
+3. Network: `POST /api/events` with `{ "ok": true, "accepted": 1 }` per click
+4. Database: `node scripts/query-demo-events.mjs click` — rows with `eventType: "click"`, `payload.element_id` set, no form values in payload
+
+---
+
+## Phase 4.4 — Scroll depth
+
+**Status: done.**
+
+**Delivered:**
+
+- `packages/tracker/src/scroll-tracking.ts` — throttled scroll listener, milestone logic, ingest send
+- `init()` calls `startScrollTracking()` in the browser (also exported manually)
+- Anti-spam: each milestone once per path; reset on pathname change
+
+**Local verification (manual):**
+
+1. Start DB, ingest API, demo site (same as prior phases)
+2. Open http://localhost:3001 and scroll slowly through the home page
+3. Network: up to four `POST /api/events` for milestones 25 → 50 → 75 → 100 (`accepted: 1` each)
+4. Database: `node scripts/query-demo-events.mjs scroll_depth` — `payload.depth_percent` in `25|50|75|100`; no duplicate milestones for the same path in one session
+
+---
+
+## Phase 4.5 — Conversion events
+
+**Status: not started.**
+
+**Goal:** Explicit safe conversion events (CTA, thank-you, etc.).
+
+**Do not do in Phase 4.5:**
+
+- Dashboard or reporting work
 
 ---
 

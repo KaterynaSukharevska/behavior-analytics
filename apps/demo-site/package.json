@@ -8,6 +8,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@behavior-analytics/tracker": "*",
     "next": "^16.2.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
