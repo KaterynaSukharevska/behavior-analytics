@@ -2,19 +2,34 @@
 
 ## Purpose of This File
 
-This file is the working context for a new Cursor Agent **before starting Phase 4 — Tracker SDK and demo-site integration**.
+Phase 4 handoff: **tracker SDK, demo-site integration, and local smoke testing**.
 
-Use it to understand:
+Use this file to understand:
 
-- what the project is,
-- what backend phases are already complete,
-- current ingest API and database persistence behavior,
-- current demo-site and tracker package state,
-- privacy and security rules for the tracker,
-- Phase 4 goals and breakdown,
-- the exact next implementation step.
+- Phase 4 status (complete),
+- tracker capabilities and public API,
+- local run and verification steps,
+- privacy rules and known limitations,
+- the recommended next phase.
 
-**Do not implement tracker code while only reading this file.**
+**Portfolio-friendly smoke checklist:** [`docs/setup/tracker-local-smoke.en.md`](setup/tracker-local-smoke.en.md)
+
+---
+
+# Phase 4 Status — Complete
+
+| Step | Title | Status |
+|------|-------|--------|
+| 4.1 | Tracker SDK foundation | Done |
+| 4.2 | Demo-site integration | Done |
+| 4.3 | Click tracking | Done |
+| 4.4 | Scroll depth | Done |
+| 4.5 | Conversion events | Done |
+| 4.6 | Tracker docs and smoke checklist | Done |
+
+**End-to-end path (local):** demo site → ingest API → PostgreSQL `analytics_events`.
+
+**Next recommended phase:** Phase 5 — dashboard reports (read persisted events; no new tracker features required for a first slice).
 
 ---
 
@@ -348,7 +363,7 @@ The tracker **must** respect:
 | **4.3** | Click tracking | **Done** — auto `startClickTracking()` on `init()`; `data-analytics-id` required; privacy ignores |
 | **4.4** | Scroll depth | **Done** — milestones 25/50/75/100; once per path; throttled scroll handler |
 | **4.5** | Conversion events | **Done** — `trackConversion()`; demo-site contact/pricing/thank-you |
-| **4.6** | Tracker docs and smoke checklist | Local setup, privacy rules, manual verification steps |
+| **4.6** | Tracker docs and smoke checklist | **Done** — [`docs/setup/tracker-local-smoke.en.md`](setup/tracker-local-smoke.en.md) |
 
 **Working style:** one small Cursor task per step; do not combine dashboard, auth, or reporting work.
 
@@ -462,9 +477,77 @@ The tracker **must** respect:
 
 ## Phase 4.6 — Tracker docs and smoke checklist
 
-**Status: not started.**
+**Status: done.**
 
-**Goal:** Local setup docs, privacy checklist, manual verification steps.
+**Delivered:** [`docs/setup/tracker-local-smoke.en.md`](setup/tracker-local-smoke.en.md) (setup, browser/DB smoke, privacy, limitations). This file updated with consolidated Phase 4 status.
+
+---
+
+# 10. Local Run and Smoke Checklist
+
+## Startup (three terminals, repo root)
+
+```bash
+docker compose up -d
+npm run dev --workspace=@behavior-analytics/ingest-api
+npm run dev --workspace=@behavior-analytics/demo-site
+```
+
+| Service | URL |
+|---------|-----|
+| Demo site | http://localhost:3001 |
+| Ingest API | http://localhost:4000/api/events |
+| Health | http://localhost:4000/api/health |
+
+## Browser smoke
+
+1. Open http://localhost:3001
+2. **Navigate** — `/`, `/features`, `/pricing`, `/contact`, `/thank-you` → `page_view` POSTs
+3. **Click** nav / CTAs with `data-analytics-id` → `click` POSTs
+4. **Scroll** home page → up to four `scroll_depth` POSTs (25, 50, 75, 100)
+5. **Convert** — contact Submit demo request; pricing Contact sales; visit `/thank-you`
+6. **Network tab** — each `POST /api/events` → `{ "ok": true, "accepted": 1 }`
+
+Optional: `NEXT_PUBLIC_BA_TRACKER_DEBUG=1` in `apps/demo-site/.env.local`.
+
+## Database smoke
+
+```bash
+node scripts/query-demo-events.mjs
+node scripts/query-demo-events.mjs page_view
+node scripts/query-demo-events.mjs click
+node scripts/query-demo-events.mjs scroll_depth
+node scripts/query-demo-events.mjs conversion
+```
+
+Verify `siteId: "demo-site"`, correct `eventType`, safe `payload` (no form values or PII).
+
+---
+
+# 11. Tracker Public API (Summary)
+
+| Function | Role |
+|----------|------|
+| `init({ siteId, endpoint })` | Config; starts click + scroll listeners in browser |
+| `trackPageView(optionalData?)` | Send `page_view` |
+| `trackConversion(name, optionalData?)` | Send explicit `conversion` |
+| `startClickTracking()` | Manual start (also called by `init`) |
+| `startScrollTracking()` | Manual start (also called by `init`) |
+
+Package: `packages/tracker`. Demo integration: `apps/demo-site/src/components/analytics-tracker.tsx`.
+
+---
+
+# 12. Known Limitations (MVP)
+
+- **No dashboard reports** — `apps/dashboard` is a placeholder
+- **No reporting/query API** for the dashboard
+- **No auth** or per-site API keys
+- **No rate limiting** on ingest
+- **No offline queue or retry** — direct `fetch`, one event per request
+- **No production deployment** docs or hosting setup yet
+- **No** session replay, heatmaps, or DOM snapshots
+- **`session_start` / `session_end`** — in contracts; not emitted by tracker yet
 
 ---
 
@@ -569,8 +652,9 @@ npm run dev --workspace=@behavior-analytics/dashboard
 
 # Related Docs
 
+- [`docs/setup/tracker-local-smoke.en.md`](setup/tracker-local-smoke.en.md) — tracker smoke checklist (primary for humans)
 - `docs/phase-3-context.md` — Phase 3 handoff (Prisma, persistence, body limit)
 - `docs/phase-2-context.md` — Phase 2 handoff (types, Zod, validation)
 - `docs/roadmap/roadmap.en.md` — full roadmap
 - `docs/architecture/architecture.en.md` — architecture
-- `docs/setup/local-development.en.md` — local setup
+- `docs/setup/local-development.en.md` — general local setup

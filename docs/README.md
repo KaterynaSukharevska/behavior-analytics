@@ -15,6 +15,10 @@ The project is designed as a real portfolio / career project for demonstrating m
 
 ```txt
 docs/
+  phase-4-context.md          Phase 4 handoff (tracker + demo-site)
+  setup/
+    local-development.en.md   General local setup
+    tracker-local-smoke.en.md Tracker run + smoke checklist
   product/
     product-definition.en.md
     product-definition.ru.md

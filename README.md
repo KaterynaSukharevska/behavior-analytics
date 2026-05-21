@@ -6,15 +6,16 @@ This is a real product-style MVP project built as a portfolio piece. It focuses 
 
 ## Current Status
 
-**Early foundation stage.** The monorepo skeleton, local infrastructure, and placeholder apps are in place. Feature implementation is in progress.
+**Tracker and ingest pipeline working locally.** Phases 1–4 are implemented for a portfolio MVP slice.
 
 What currently works:
 
-- npm workspaces monorepo with shared config
-- PostgreSQL running locally via Docker Compose
-- Fastify ingest API with a health endpoint (`/api/health`)
-- Next.js dashboard (placeholder)
-- Next.js demo marketing site (placeholder, used later for SDK testing)
+- npm workspaces monorepo with shared types and Zod validation
+- PostgreSQL via Docker Compose; events persisted with Prisma
+- Fastify ingest API: `GET /api/health`, `POST /api/events` (validated, 256 KB limit)
+- Browser tracker SDK (`packages/tracker`): `page_view`, `click`, `scroll_depth`, `conversion`
+- Demo site (`localhost:3001`) integrated with the tracker; events flow to the database
+- Next.js dashboard (placeholder — reports not wired yet)
 
 ## Local Apps and Ports
 
@@ -37,8 +38,9 @@ What currently works:
 | Ingest API       | Fastify                     |
 | Database         | PostgreSQL                  |
 | Infrastructure   | Docker Compose              |
-| Contracts        | Zod (planned / in progress) |
-| Testing          | Vitest, Playwright (planned)|
+| Contracts        | TypeScript + Zod            |
+| DB toolkit       | Prisma                      |
+| Testing          | Vitest (analytics-core)     |
 
 ## Monorepo Structure
 
@@ -49,10 +51,10 @@ apps/
   demo-site/          Next.js demo marketing site
 
 packages/
-  tracker/            Browser tracking SDK (planned)
-  types/              Shared TypeScript types (planned)
-  analytics-core/     Core analytics logic (planned)
-  config/             Shared config and constants (planned)
+  tracker/            Browser tracking SDK
+  types/              Shared TypeScript event types
+  analytics-core/     Zod validation schemas + tests
+  config/             Shared config (placeholder)
 
 docs/                 Product, architecture, roadmap, and setup docs
 ```
@@ -134,3 +136,5 @@ Detailed docs live in the `docs/` folder:
 - [`docs/architecture`](docs/architecture) — system architecture
 - [`docs/roadmap`](docs/roadmap) — roadmap and phasing
 - [`docs/setup`](docs/setup) — local development setup
+- [`docs/setup/tracker-local-smoke.en.md`](docs/setup/tracker-local-smoke.en.md) — tracker local run and smoke checklist
+- [`docs/phase-4-context.md`](docs/phase-4-context.md) — Phase 4 handoff (tracker + demo-site)

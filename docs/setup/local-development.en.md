@@ -558,18 +558,26 @@ Local development setup is ready when:
 - Cursor can open the project root;
 - the next implementation step can begin.
 
-## 21. Next Step After This Document
+## 21. Tracker and Event Smoke Testing
 
-After saving this setup document, the documentation baseline is enough to start implementation.
+Phase 4 (tracker SDK + demo-site) is complete. For a step-by-step local smoke checklist (browser Network tab + PostgreSQL queries), see:
 
-Recommended next phase:
+**[`docs/setup/tracker-local-smoke.en.md`](tracker-local-smoke.en.md)**
 
-```txt
-Phase 1 — Local Development and Repo Foundation
+Quick commands (repo root, with DB and ingest API running):
+
+```bash
+npm run dev --workspace=@behavior-analytics/ingest-api
+npm run dev --workspace=@behavior-analytics/demo-site
+node scripts/query-demo-events.mjs
 ```
 
-First implementation task:
+## 22. Next Step After This Document
+
+For new implementation work after Phase 4, the recommended next phase is:
 
 ```txt
-Create initial monorepo foundation with npm workspaces, root configs, docs folder preserved, and Docker Compose PostgreSQL.
+Phase 5 — Dashboard reports (read persisted events; basic UI)
 ```
+
+Tracker smoke and privacy details: [`tracker-local-smoke.en.md`](tracker-local-smoke.en.md).
