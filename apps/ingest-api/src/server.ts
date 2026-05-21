@@ -2,7 +2,19 @@ import Fastify, { type FastifyError } from "fastify";
 import cors from "@fastify/cors";
 import { IngestEventsRequestSchema } from "@behavior-analytics/analytics-core";
 import { disconnectPrisma } from "./db/prisma.js";
+import { getOverviewTotals } from "./db/get-overview-totals.js";
 import { saveAnalyticsEvents } from "./db/save-analytics-events.js";
+
+function parseSiteIdQuery(query: unknown): string | null {
+  const raw = (query as { siteId?: unknown })?.siteId;
+
+  if (typeof raw !== "string") {
+    return null;
+  }
+
+  const trimmed = raw.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
 
 const port = Number(process.env.INGEST_API_PORT ?? 4000);
 
@@ -39,6 +51,33 @@ app.get("/api/health", async () => {
     ok: true,
     service: "ingest-api",
   };
+});
+
+app.get("/api/reports/overview", async (request, reply) => {
+  const siteId = parseSiteIdQuery(request.query);
+
+  if (!siteId) {
+    return reply.status(400).send({
+      ok: false,
+      error: "INVALID_SITE_ID",
+    });
+  }
+
+  try {
+    const totals = await getOverviewTotals(siteId);
+
+    return {
+      siteId,
+      totals,
+    };
+  } catch (error) {
+    request.log.error({ err: error }, "Failed to load reporting overview");
+
+    return reply.status(500).send({
+      ok: false,
+      error: "REPORTING_OVERVIEW_FAILED",
+    });
+  }
 });
 
 app.post("/api/events", async (request, reply) => {

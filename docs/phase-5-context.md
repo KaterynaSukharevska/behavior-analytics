@@ -19,11 +19,11 @@ Use this file to understand:
 
 ---
 
-# Phase 5 Status — Not Started
+# Phase 5 Status — In Progress
 
 | Step | Title | Status |
 |------|-------|--------|
-| 5.1 | Reporting API overview endpoint | Not started |
+| 5.1 | Reporting API overview endpoint | **Done** |
 | 5.2 | Dashboard API client | Not started |
 | 5.3 | Basic dashboard metrics UI | Not started |
 | 5.4 | Page views by path | Not started |
@@ -35,7 +35,42 @@ Use this file to understand:
 
 **End-to-end path after Phase 5 (goal):** same ingest path **plus** dashboard → reporting API → PostgreSQL aggregates → UI metrics.
 
-**Recommended first step:** Phase 5.1 — `GET /api/reports/overview?siteId=demo-site` on the ingest API (or a dedicated reports module in the same app).
+**Next recommended step:** Phase 5.2 — dashboard API client to call the overview endpoint.
+
+### Phase 5.1 — Reporting API overview (done)
+
+**Endpoint:** `GET /api/reports/overview?siteId=<siteId>`
+
+**Success (200):**
+
+```json
+{
+  "siteId": "demo-site",
+  "totals": {
+    "pageViews": 0,
+    "clicks": 0,
+    "scrollDepthEvents": 0,
+    "conversions": 0
+  }
+}
+```
+
+**Errors:**
+
+| Condition | HTTP | Body |
+|-----------|------|------|
+| Missing or blank `siteId` | `400` | `{ "ok": false, "error": "INVALID_SITE_ID" }` |
+| DB/query failure | `500` | `{ "ok": false, "error": "REPORTING_OVERVIEW_FAILED" }` |
+
+**Implementation:** `apps/ingest-api/src/server.ts` (route) + `apps/ingest-api/src/db/get-overview-totals.ts` (Prisma `groupBy` on `eventType`).
+
+**Verify:**
+
+```bash
+curl "http://localhost:4000/api/reports/overview?siteId=demo-site"
+curl "http://localhost:4000/api/reports/overview"
+curl "http://localhost:4000/api/reports/overview?siteId="
+```
 
 ---
 
@@ -445,7 +480,7 @@ Ingest API does **not** log request bodies.
 | Area | State |
 |------|--------|
 | Dashboard reports | Placeholder UI only; no live metrics |
-| Reporting API | No read/aggregation endpoints yet |
+| Reporting API | Overview totals only (`GET /api/reports/overview`); no path breakdowns or date filters yet |
 | Auth | None |
 | Rate limiting | None on ingest |
 | Production deployment | Local workflow only; no hosting docs |
@@ -480,11 +515,13 @@ Goal: read `analytics_events` from PostgreSQL and expose **simple aggregates** t
 
 ---
 
-# 11. Recommended First Implementation Step — Phase 5.1
+# 11. Phase 5.1 — Reporting API Overview Endpoint (Complete)
 
 ## Reporting API Overview Endpoint
 
-**Goal:** Add a simple reporting endpoint that reads `analytics_events` from PostgreSQL and returns basic totals for `siteId=demo-site`.
+**Status: done.** Implemented in ingest-api.
+
+**Goal (met):** Read `analytics_events` from PostgreSQL and return basic totals for a given `siteId`.
 
 **Suggested endpoint:**
 
@@ -637,7 +674,7 @@ Summarize files changed and suggest Phase 5.2 (dashboard API client).
 | Ingest API | http://localhost:4000 |
 | Health | http://localhost:4000/api/health |
 | Events | http://localhost:4000/api/events |
-| Reports (planned) | http://localhost:4000/api/reports/overview?siteId=demo-site |
+| Reports overview | http://localhost:4000/api/reports/overview?siteId=demo-site |
 | PostgreSQL | localhost:5432 |
 
 ---
