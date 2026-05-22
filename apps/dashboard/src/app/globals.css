@@ -186,3 +186,54 @@ body {
     background-position: -100% 0;
   }
 }
+
+.path-table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.path-table th,
+.path-table td {
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.path-table th {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #55627b;
+  background: #f8fafc;
+}
+
+.path-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.path-table__path {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.875rem;
+  color: #162033;
+}
+
+.path-table__count {
+  font-weight: 600;
+  color: #162033;
+  width: 6rem;
+}
+
+.path-table--skeleton td {
+  border-bottom-color: #eef2f7;
+}
+
+.skeleton-line--path {
+  width: 70%;
+  margin: 0.25rem 0;
+}
+
+.skeleton-line--count {
+  width: 2.5rem;
+  margin: 0.25rem 0;
+}

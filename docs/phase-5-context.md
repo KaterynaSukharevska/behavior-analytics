@@ -27,7 +27,7 @@ Use this file to understand:
 | 5.2 | Dashboard API client | **Done** |
 | 5.3 | Basic dashboard metrics UI | **Done** |
 | 5.4a | Reporting API page views by path | **Done** |
-| 5.4b | Dashboard page views by path | Not started |
+| 5.4b | Dashboard page views by path | **Done** |
 | 5.5 | Clicks and conversions summary | Not started |
 | 5.6 | Scroll depth summary | Not started |
 | 5.7 | Dashboard smoke docs | Not started |
@@ -36,7 +36,7 @@ Use this file to understand:
 
 **End-to-end path after Phase 5 (goal):** same ingest path **plus** dashboard → reporting API → PostgreSQL aggregates → UI metrics.
 
-**Next recommended step:** Phase 5.4b — dashboard page views by path UI (or Phase 5.5).
+**Next recommended step:** Phase 5.5 — clicks and conversions summary (API + dashboard).
 
 ### Phase 5.1 — Reporting API overview (done)
 
@@ -161,6 +161,28 @@ curl "http://localhost:4000/api/reports/page-views-by-path?siteId=demo-site"
 curl "http://localhost:4000/api/reports/page-views-by-path"
 curl "http://localhost:4000/api/reports/page-views-by-path?siteId="
 npm run typecheck --workspace=@behavior-analytics/ingest-api
+```
+
+### Phase 5.4b — Dashboard page views by path (done)
+
+**API client:** `fetchPageViewsByPathReport()` in `apps/dashboard/src/lib/reports-api.ts` (shared `fetchReport` helper with overview).
+
+**UI:** `apps/dashboard/src/components/page-views-by-path.tsx` — table of path + page views; loading skeleton, error, empty, success states.
+
+**Page:** `apps/dashboard/src/app/page.tsx` renders `<PageViewsByPath />` below overview metric cards.
+
+**Verify:**
+
+```bash
+docker compose up -d postgres
+npm run dev --workspace=@behavior-analytics/ingest-api
+npm run dev --workspace=@behavior-analytics/dashboard
+```
+
+Open http://localhost:3000 — overview cards plus “Page views by path” table. Stop ingest-api, reload — error alert in that section only.
+
+```bash
+npm run typecheck --workspace=@behavior-analytics/dashboard
 ```
 
 ---
@@ -570,7 +592,7 @@ Ingest API does **not** log request bodies.
 
 | Area | State |
 |------|--------|
-| Dashboard reports | Overview metric cards on home page; no charts or path breakdowns yet |
+| Dashboard reports | Overview cards + page views by path table; no charts or click/conversion breakdowns yet |
 | Reporting API | Overview totals only (`GET /api/reports/overview`); no path breakdowns or date filters yet |
 | Auth | None |
 | Rate limiting | None on ingest |

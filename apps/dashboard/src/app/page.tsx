@@ -1,4 +1,5 @@
 import { OverviewReport } from "../components/overview-report";
+import { PageViewsByPath } from "../components/page-views-by-path";
 
 export default function HomePage() {
   return (
@@ -31,6 +32,7 @@ export default function HomePage() {
       </section>
 
       <OverviewReport />
+      <PageViewsByPath />
     </main>
   );
 }

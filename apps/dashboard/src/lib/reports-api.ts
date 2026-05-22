@@ -10,6 +10,16 @@ export type OverviewReport = {
   totals: OverviewTotals;
 };
 
+export type PageViewsByPathItem = {
+  path: string;
+  pageViews: number;
+};
+
+export type PageViewsByPathReport = {
+  siteId: string;
+  items: PageViewsByPathItem[];
+};
+
 type ReportsApiErrorBody = {
   ok: false;
   error: string;
@@ -24,14 +34,19 @@ function messageForApiError(errorCode: string | undefined): string {
     return "Reporting failed on the server.";
   }
 
-  return "Failed to load overview report.";
+  if (errorCode === "REPORTING_PAGE_VIEWS_BY_PATH_FAILED") {
+    return "Reporting failed on the server.";
+  }
+
+  return "Failed to load report.";
 }
 
-export async function fetchOverviewReport(
+async function fetchReport<T>(
+  endpointPath: string,
   baseUrl: string,
   siteId: string,
-): Promise<OverviewReport> {
-  const url = new URL("/api/reports/overview", baseUrl);
+): Promise<T> {
+  const url = new URL(endpointPath, baseUrl);
   url.searchParams.set("siteId", siteId);
 
   let response: Response;
@@ -57,5 +72,23 @@ export async function fetchOverviewReport(
     throw new Error(messageForApiError(apiError?.error));
   }
 
-  return data as OverviewReport;
+  return data as T;
+}
+
+export function fetchOverviewReport(
+  baseUrl: string,
+  siteId: string,
+): Promise<OverviewReport> {
+  return fetchReport<OverviewReport>("/api/reports/overview", baseUrl, siteId);
+}
+
+export function fetchPageViewsByPathReport(
+  baseUrl: string,
+  siteId: string,
+): Promise<PageViewsByPathReport> {
+  return fetchReport<PageViewsByPathReport>(
+    "/api/reports/page-views-by-path",
+    baseUrl,
+    siteId,
+  );
 }
