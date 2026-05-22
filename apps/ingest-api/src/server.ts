@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 import { IngestEventsRequestSchema } from "@behavior-analytics/analytics-core";
 import { disconnectPrisma } from "./db/prisma.js";
 import { getOverviewTotals } from "./db/get-overview-totals.js";
+import { getInteractionsSummary } from "./db/get-interactions-summary.js";
 import { getPageViewsByPath } from "./db/get-page-views-by-path.js";
 import { saveAnalyticsEvents } from "./db/save-analytics-events.js";
 
@@ -104,6 +105,34 @@ app.get("/api/reports/page-views-by-path", async (request, reply) => {
     return reply.status(500).send({
       ok: false,
       error: "REPORTING_PAGE_VIEWS_BY_PATH_FAILED",
+    });
+  }
+});
+
+app.get("/api/reports/interactions-summary", async (request, reply) => {
+  const siteId = parseSiteIdQuery(request.query);
+
+  if (!siteId) {
+    return reply.status(400).send({
+      ok: false,
+      error: "INVALID_SITE_ID",
+    });
+  }
+
+  try {
+    const summary = await getInteractionsSummary(siteId);
+
+    return {
+      siteId,
+      clicks: summary.clicks,
+      conversions: summary.conversions,
+    };
+  } catch (error) {
+    request.log.error({ err: error }, "Failed to load interactions summary");
+
+    return reply.status(500).send({
+      ok: false,
+      error: "REPORTING_INTERACTIONS_SUMMARY_FAILED",
     });
   }
 });
