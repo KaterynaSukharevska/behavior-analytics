@@ -36,6 +36,16 @@ export type InteractionsSummaryReport = {
   conversions: ConversionSummaryItem[];
 };
 
+export type ScrollDepthSummaryItem = {
+  depthPercent: number;
+  events: number;
+};
+
+export type ScrollDepthSummaryReport = {
+  siteId: string;
+  items: ScrollDepthSummaryItem[];
+};
+
 type ReportsApiErrorBody = {
   ok: false;
   error: string;
@@ -55,6 +65,10 @@ function messageForApiError(errorCode: string | undefined): string {
   }
 
   if (errorCode === "REPORTING_INTERACTIONS_SUMMARY_FAILED") {
+    return "Reporting failed on the server.";
+  }
+
+  if (errorCode === "REPORTING_SCROLL_DEPTH_SUMMARY_FAILED") {
     return "Reporting failed on the server.";
   }
 
@@ -119,6 +133,17 @@ export function fetchInteractionsSummaryReport(
 ): Promise<InteractionsSummaryReport> {
   return fetchReport<InteractionsSummaryReport>(
     "/api/reports/interactions-summary",
+    baseUrl,
+    siteId,
+  );
+}
+
+export function fetchScrollDepthSummaryReport(
+  baseUrl: string,
+  siteId: string,
+): Promise<ScrollDepthSummaryReport> {
+  return fetchReport<ScrollDepthSummaryReport>(
+    "/api/reports/scroll-depth-summary",
     baseUrl,
     siteId,
   );

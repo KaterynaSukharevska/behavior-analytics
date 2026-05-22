@@ -31,14 +31,14 @@ Use this file to understand:
 | 5.5a | Reporting API interactions summary | **Done** |
 | 5.5b | Dashboard interactions summary | **Done** |
 | 5.6a | Reporting API scroll depth summary | **Done** |
-| 5.6b | Dashboard scroll depth summary | Not started |
+| 5.6b | Dashboard scroll depth summary | **Done** |
 | 5.7 | Dashboard smoke docs | Not started |
 
 **End-to-end path today (local):** demo site → tracker → ingest API → Zod validation → Prisma → PostgreSQL `analytics_events`.
 
 **End-to-end path after Phase 5 (goal):** same ingest path **plus** dashboard → reporting API → PostgreSQL aggregates → UI metrics.
 
-**Next recommended step:** Phase 5.6b — dashboard scroll depth summary UI (or Phase 5.7 smoke docs).
+**Next recommended step:** Phase 5.7 — dashboard smoke docs.
 
 ### Phase 5.1 — Reporting API overview (done)
 
@@ -286,6 +286,28 @@ curl "http://localhost:4000/api/reports/scroll-depth-summary?siteId=demo-site"
 curl "http://localhost:4000/api/reports/scroll-depth-summary"
 curl "http://localhost:4000/api/reports/scroll-depth-summary?siteId="
 npm run typecheck --workspace=@behavior-analytics/ingest-api
+```
+
+### Phase 5.6b — Dashboard scroll depth summary (done)
+
+**API client:** `fetchScrollDepthSummaryReport()` + types in `apps/dashboard/src/lib/reports-api.ts`.
+
+**UI:** `apps/dashboard/src/components/scroll-depth-summary.tsx` — Depth (25%–100%) and Events table; loading, error, empty, success states.
+
+**Page:** `<ScrollDepthSummary />` below interactions summary on the dashboard home page.
+
+**Verify:**
+
+```bash
+docker compose up -d postgres
+npm run dev --workspace=@behavior-analytics/ingest-api
+npm run dev --workspace=@behavior-analytics/dashboard
+```
+
+Open http://localhost:3000 — all report sections including scroll depth. Stop ingest-api, reload — error in scroll depth section only.
+
+```bash
+npm run typecheck --workspace=@behavior-analytics/dashboard
 ```
 
 ---
@@ -695,7 +717,7 @@ Ingest API does **not** log request bodies.
 
 | Area | State |
 |------|--------|
-| Dashboard reports | Overview cards, page views by path, interactions summary; no charts or scroll depth breakdown yet |
+| Dashboard reports | Overview, page views by path, interactions, scroll depth; no charts or date filters yet |
 | Reporting API | Overview totals only (`GET /api/reports/overview`); no path breakdowns or date filters yet |
 | Auth | None |
 | Rate limiting | None on ingest |
