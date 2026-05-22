@@ -31,10 +31,6 @@ export default function HomePage() {
       </section>
 
       <OverviewReport />
-
-      <p className="note">
-        Temporary overview section. Full dashboard design comes in later phases.
-      </p>
     </main>
   );
 }

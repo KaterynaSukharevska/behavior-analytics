@@ -25,7 +25,7 @@ Use this file to understand:
 |------|-------|--------|
 | 5.1 | Reporting API overview endpoint | **Done** |
 | 5.2 | Dashboard API client | **Done** |
-| 5.3 | Basic dashboard metrics UI | Not started |
+| 5.3 | Basic dashboard metrics UI | **Done** |
 | 5.4 | Page views by path | Not started |
 | 5.5 | Clicks and conversions summary | Not started |
 | 5.6 | Scroll depth summary | Not started |
@@ -35,7 +35,7 @@ Use this file to understand:
 
 **End-to-end path after Phase 5 (goal):** same ingest path **plus** dashboard → reporting API → PostgreSQL aggregates → UI metrics.
 
-**Next recommended step:** Phase 5.3 — polish basic dashboard metrics UI (or split remaining report sections per 5.4–5.7).
+**Next recommended step:** Phase 5.4 — page views by path (or Phase 5.7 dashboard smoke docs).
 
 ### Phase 5.1 — Reporting API overview (done)
 
@@ -97,6 +97,33 @@ Open http://localhost:3000 — expect brief loading, then totals. Stop ingest-ap
 ```bash
 npm run typecheck --workspace=@behavior-analytics/dashboard
 npm run typecheck --workspace=@behavior-analytics/ingest-api
+```
+
+### Phase 5.3 — Basic dashboard metrics UI (done)
+
+**UI:** `apps/dashboard/src/components/overview-report.tsx` — metric cards, loading skeletons, friendly error and zero states.
+
+**States:**
+
+| State | Behavior |
+|-------|----------|
+| Loading | “Loading metrics…” + four skeleton cards |
+| Error | Safe alert (no stack traces); suggests ingest API + refresh |
+| Zero | All totals `0` → info message pointing to demo site |
+| Success | Four metric cards with live API values |
+
+**Verify:**
+
+```bash
+docker compose up -d postgres
+npm run dev --workspace=@behavior-analytics/ingest-api
+npm run dev --workspace=@behavior-analytics/dashboard
+```
+
+Open http://localhost:3000 — four cards with numbers. Stop ingest-api, reload — error alert only. Empty DB → zero-state message + cards showing `0`.
+
+```bash
+npm run typecheck --workspace=@behavior-analytics/dashboard
 ```
 
 ---
@@ -506,7 +533,7 @@ Ingest API does **not** log request bodies.
 
 | Area | State |
 |------|--------|
-| Dashboard reports | Overview totals on home page (temporary UI); no charts or path breakdowns yet |
+| Dashboard reports | Overview metric cards on home page; no charts or path breakdowns yet |
 | Reporting API | Overview totals only (`GET /api/reports/overview`); no path breakdowns or date filters yet |
 | Auth | None |
 | Rate limiting | None on ingest |

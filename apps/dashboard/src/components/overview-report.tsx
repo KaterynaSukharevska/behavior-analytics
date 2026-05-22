@@ -1,13 +1,62 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchOverviewReport, type OverviewReport } from "../lib/reports-api";
+import {
+  fetchOverviewReport,
+  type OverviewReport,
+  type OverviewTotals,
+} from "../lib/reports-api";
 import { DEMO_SITE_ID, INGEST_API_BASE_URL } from "../lib/reports-config";
 
 type LoadState =
   | { status: "loading" }
-  | { status: "error"; message: string }
+  | { status: "error" }
   | { status: "success"; report: OverviewReport };
+
+const METRIC_CARDS: {
+  label: string;
+  key: keyof OverviewTotals;
+}[] = [
+  { label: "Page views", key: "pageViews" },
+  { label: "Clicks", key: "clicks" },
+  { label: "Scroll depth events", key: "scrollDepthEvents" },
+  { label: "Conversions", key: "conversions" },
+];
+
+function isEmptyTotals(totals: OverviewTotals): boolean {
+  return (
+    totals.pageViews === 0 &&
+    totals.clicks === 0 &&
+    totals.scrollDepthEvents === 0 &&
+    totals.conversions === 0
+  );
+}
+
+function MetricCardsSkeleton() {
+  return (
+    <div className="metric-cards" aria-hidden="true">
+      {METRIC_CARDS.map((card) => (
+        <article key={card.key} className="metric-card metric-card--skeleton">
+          <div className="skeleton-line skeleton-line--label" />
+          <div className="skeleton-line skeleton-line--value" />
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function MetricCards({ totals }: { totals: OverviewTotals }) {
+  return (
+    <div className="metric-cards">
+      {METRIC_CARDS.map((card) => (
+        <article key={card.key} className="metric-card">
+          <h3 className="metric-card__label">{card.label}</h3>
+          <p className="metric-card__value">{totals[card.key]}</p>
+        </article>
+      ))}
+    </div>
+  );
+}
 
 export function OverviewReport() {
   const [state, setState] = useState<LoadState>({ status: "loading" });
@@ -25,13 +74,9 @@ export function OverviewReport() {
         if (!cancelled) {
           setState({ status: "success", report });
         }
-      } catch (error) {
+      } catch {
         if (!cancelled) {
-          const message =
-            error instanceof Error
-              ? error.message
-              : "Failed to load overview report.";
-          setState({ status: "error", message });
+          setState({ status: "error" });
         }
       }
     }
@@ -44,38 +89,45 @@ export function OverviewReport() {
   }, []);
 
   return (
-    <section className="overview-report" aria-label="overview report">
-      <h2>Overview report ({DEMO_SITE_ID})</h2>
+    <section className="metrics-panel" aria-label="Demo site metrics">
+      <header className="metrics-panel__header">
+        <h2>Demo site metrics</h2>
+        <p>
+          This dashboard shows behavior analytics collected from the demo site
+          ({DEMO_SITE_ID}). Browse{" "}
+          <a href="http://localhost:3001">localhost:3001</a> to generate new
+          events.
+        </p>
+      </header>
 
       {state.status === "loading" && (
-        <p className="overview-report__message">Loading overview totals…</p>
+        <>
+          <p className="metrics-panel__status">Loading metrics…</p>
+          <MetricCardsSkeleton />
+        </>
       )}
 
       {state.status === "error" && (
-        <p className="overview-report__message overview-report__message--error">
-          {state.message}
-        </p>
+        <div className="metrics-panel__alert metrics-panel__alert--error" role="alert">
+          <p>
+            We could not load metrics right now. Make sure the ingest API is
+            running, then refresh this page.
+          </p>
+        </div>
+      )}
+
+      {state.status === "success" && isEmptyTotals(state.report.totals) && (
+        <div className="metrics-panel__alert metrics-panel__alert--info">
+          <p>
+            No events yet for the demo site. Open the demo site, visit a few
+            pages, click a CTA, scroll, and try a conversion — totals will
+            appear here after data is ingested.
+          </p>
+        </div>
       )}
 
       {state.status === "success" && (
-        <dl className="overview-report__totals">
-          <div>
-            <dt>Page views</dt>
-            <dd>{state.report.totals.pageViews}</dd>
-          </div>
-          <div>
-            <dt>Clicks</dt>
-            <dd>{state.report.totals.clicks}</dd>
-          </div>
-          <div>
-            <dt>Scroll depth events</dt>
-            <dd>{state.report.totals.scrollDepthEvents}</dd>
-          </div>
-          <div>
-            <dt>Conversions</dt>
-            <dd>{state.report.totals.conversions}</dd>
-          </div>
-        </dl>
+        <MetricCards totals={state.report.totals} />
       )}
     </section>
   );

@@ -67,7 +67,7 @@ body {
   color: #55627b;
 }
 
-.overview-report {
+.metrics-panel {
   margin-top: 2rem;
   background: #ffffff;
   border: 1px solid #dbe3f0;
@@ -75,40 +75,114 @@ body {
   padding: 1.25rem;
 }
 
-.overview-report h2 {
-  margin-top: 0;
-  margin-bottom: 0.75rem;
+.metrics-panel__header h2 {
+  margin: 0 0 0.5rem;
   font-size: 1.125rem;
 }
 
-.overview-report__message {
+.metrics-panel__header p {
   margin: 0;
+  line-height: 1.6;
   color: #3d4960;
+  font-size: 0.9375rem;
 }
 
-.overview-report__message--error {
-  color: #9b1c1c;
+.metrics-panel__header a {
+  color: #1e56d9;
+  text-decoration: none;
 }
 
-.overview-report__totals {
+.metrics-panel__header a:hover {
+  text-decoration: underline;
+}
+
+.metrics-panel__status {
+  margin: 1rem 0 0.75rem;
+  color: #55627b;
+  font-size: 0.875rem;
+}
+
+.metrics-panel__alert {
+  margin-top: 1rem;
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.metrics-panel__alert p {
+  margin: 0;
+}
+
+.metrics-panel__alert--error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #7f1d1d;
+}
+
+.metrics-panel__alert--info {
+  background: #f0f6ff;
+  border: 1px solid #c7d9f5;
+  color: #1e3a5f;
+}
+
+.metric-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   gap: 1rem;
-  margin: 0;
+  margin-top: 1rem;
 }
 
-.overview-report__totals div {
+.metric-card {
   margin: 0;
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
 }
 
-.overview-report__totals dt {
+.metric-card__label {
   margin: 0;
   font-size: 0.875rem;
+  font-weight: 500;
   color: #55627b;
 }
 
-.overview-report__totals dd {
-  margin: 0.25rem 0 0;
-  font-size: 1.5rem;
+.metric-card__value {
+  margin: 0.5rem 0 0;
+  font-size: 1.75rem;
   font-weight: 600;
+  color: #162033;
+  line-height: 1.2;
+}
+
+.metric-card--skeleton {
+  min-height: 5.5rem;
+}
+
+.skeleton-line {
+  height: 0.875rem;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #e8edf5 25%, #f4f6fa 50%, #e8edf5 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton-line--label {
+  width: 60%;
+  margin-bottom: 0.75rem;
+}
+
+.skeleton-line--value {
+  width: 40%;
+  height: 1.5rem;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
 }
