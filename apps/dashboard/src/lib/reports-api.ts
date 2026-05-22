@@ -20,6 +20,22 @@ export type PageViewsByPathReport = {
   items: PageViewsByPathItem[];
 };
 
+export type ClickSummaryItem = {
+  elementId: string;
+  clicks: number;
+};
+
+export type ConversionSummaryItem = {
+  conversionName: string;
+  conversions: number;
+};
+
+export type InteractionsSummaryReport = {
+  siteId: string;
+  clicks: ClickSummaryItem[];
+  conversions: ConversionSummaryItem[];
+};
+
 type ReportsApiErrorBody = {
   ok: false;
   error: string;
@@ -35,6 +51,10 @@ function messageForApiError(errorCode: string | undefined): string {
   }
 
   if (errorCode === "REPORTING_PAGE_VIEWS_BY_PATH_FAILED") {
+    return "Reporting failed on the server.";
+  }
+
+  if (errorCode === "REPORTING_INTERACTIONS_SUMMARY_FAILED") {
     return "Reporting failed on the server.";
   }
 
@@ -88,6 +108,17 @@ export function fetchPageViewsByPathReport(
 ): Promise<PageViewsByPathReport> {
   return fetchReport<PageViewsByPathReport>(
     "/api/reports/page-views-by-path",
+    baseUrl,
+    siteId,
+  );
+}
+
+export function fetchInteractionsSummaryReport(
+  baseUrl: string,
+  siteId: string,
+): Promise<InteractionsSummaryReport> {
+  return fetchReport<InteractionsSummaryReport>(
+    "/api/reports/interactions-summary",
     baseUrl,
     siteId,
   );

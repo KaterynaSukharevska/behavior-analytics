@@ -29,7 +29,7 @@ Use this file to understand:
 | 5.4a | Reporting API page views by path | **Done** |
 | 5.4b | Dashboard page views by path | **Done** |
 | 5.5a | Reporting API interactions summary | **Done** |
-| 5.5b | Dashboard interactions summary | Not started |
+| 5.5b | Dashboard interactions summary | **Done** |
 | 5.6 | Scroll depth summary | Not started |
 | 5.7 | Dashboard smoke docs | Not started |
 
@@ -37,7 +37,7 @@ Use this file to understand:
 
 **End-to-end path after Phase 5 (goal):** same ingest path **plus** dashboard → reporting API → PostgreSQL aggregates → UI metrics.
 
-**Next recommended step:** Phase 5.5b — dashboard interactions summary UI (or Phase 5.6 scroll depth).
+**Next recommended step:** Phase 5.6 — scroll depth summary (API + dashboard).
 
 ### Phase 5.1 — Reporting API overview (done)
 
@@ -223,6 +223,28 @@ curl "http://localhost:4000/api/reports/interactions-summary?siteId=demo-site"
 curl "http://localhost:4000/api/reports/interactions-summary"
 curl "http://localhost:4000/api/reports/interactions-summary?siteId="
 npm run typecheck --workspace=@behavior-analytics/ingest-api
+```
+
+### Phase 5.5b — Dashboard interactions summary (done)
+
+**API client:** `fetchInteractionsSummaryReport()` + types in `apps/dashboard/src/lib/reports-api.ts`.
+
+**UI:** `apps/dashboard/src/components/interactions-summary.tsx` — “Top clicked elements” and “Conversions” tables; loading, error, empty (both arrays empty), success states.
+
+**Page:** `<InteractionsSummary />` below page views by path on the dashboard home page.
+
+**Verify:**
+
+```bash
+docker compose up -d postgres
+npm run dev --workspace=@behavior-analytics/ingest-api
+npm run dev --workspace=@behavior-analytics/dashboard
+```
+
+Open http://localhost:3000 — overview, page views by path, and interactions summary sections. Stop ingest-api, reload — error in interactions section only.
+
+```bash
+npm run typecheck --workspace=@behavior-analytics/dashboard
 ```
 
 ---
@@ -632,7 +654,7 @@ Ingest API does **not** log request bodies.
 
 | Area | State |
 |------|--------|
-| Dashboard reports | Overview cards + page views by path table; no charts or click/conversion breakdowns yet |
+| Dashboard reports | Overview cards, page views by path, interactions summary; no charts or scroll depth breakdown yet |
 | Reporting API | Overview totals only (`GET /api/reports/overview`); no path breakdowns or date filters yet |
 | Auth | None |
 | Rate limiting | None on ingest |

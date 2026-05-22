@@ -1,4 +1,5 @@
 import { OverviewReport } from "../components/overview-report";
+import { InteractionsSummary } from "../components/interactions-summary";
 import { PageViewsByPath } from "../components/page-views-by-path";
 
 export default function HomePage() {
@@ -33,6 +34,7 @@ export default function HomePage() {
 
       <OverviewReport />
       <PageViewsByPath />
+      <InteractionsSummary />
     </main>
   );
 }
