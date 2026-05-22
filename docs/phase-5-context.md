@@ -30,14 +30,15 @@ Use this file to understand:
 | 5.4b | Dashboard page views by path | **Done** |
 | 5.5a | Reporting API interactions summary | **Done** |
 | 5.5b | Dashboard interactions summary | **Done** |
-| 5.6 | Scroll depth summary | Not started |
+| 5.6a | Reporting API scroll depth summary | **Done** |
+| 5.6b | Dashboard scroll depth summary | Not started |
 | 5.7 | Dashboard smoke docs | Not started |
 
 **End-to-end path today (local):** demo site → tracker → ingest API → Zod validation → Prisma → PostgreSQL `analytics_events`.
 
 **End-to-end path after Phase 5 (goal):** same ingest path **plus** dashboard → reporting API → PostgreSQL aggregates → UI metrics.
 
-**Next recommended step:** Phase 5.6 — scroll depth summary (API + dashboard).
+**Next recommended step:** Phase 5.6b — dashboard scroll depth summary UI (or Phase 5.7 smoke docs).
 
 ### Phase 5.1 — Reporting API overview (done)
 
@@ -245,6 +246,46 @@ Open http://localhost:3000 — overview, page views by path, and interactions su
 
 ```bash
 npm run typecheck --workspace=@behavior-analytics/dashboard
+```
+
+### Phase 5.6a — Reporting API scroll depth summary (done)
+
+**Endpoint:** `GET /api/reports/scroll-depth-summary?siteId=<siteId>`
+
+**Success (200):**
+
+```json
+{
+  "siteId": "demo-site",
+  "items": [
+    { "depthPercent": 25, "events": 2 },
+    { "depthPercent": 50, "events": 1 },
+    { "depthPercent": 75, "events": 1 },
+    { "depthPercent": 100, "events": 1 }
+  ]
+}
+```
+
+**Rules:** `eventType = scroll_depth` only; group by `payload.depth_percent` (numeric); valid milestones **25, 50, 75, 100** only; sort `depthPercent` ascending. Milestones with zero events are omitted.
+
+**Payload field:** `depth_percent` in stored JSON (snake_case, same as tracker/types). TypeScript aggregation after `findMany`.
+
+**Errors:**
+
+| Condition | HTTP | Body |
+|-----------|------|------|
+| Missing or blank `siteId` | `400` | `{ "ok": false, "error": "INVALID_SITE_ID" }` |
+| DB/query failure | `500` | `{ "ok": false, "error": "REPORTING_SCROLL_DEPTH_SUMMARY_FAILED" }` |
+
+**Implementation:** `apps/ingest-api/src/server.ts` + `apps/ingest-api/src/db/get-scroll-depth-summary.ts`.
+
+**Verify:**
+
+```bash
+curl "http://localhost:4000/api/reports/scroll-depth-summary?siteId=demo-site"
+curl "http://localhost:4000/api/reports/scroll-depth-summary"
+curl "http://localhost:4000/api/reports/scroll-depth-summary?siteId="
+npm run typecheck --workspace=@behavior-analytics/ingest-api
 ```
 
 ---

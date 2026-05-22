@@ -5,6 +5,7 @@ import { disconnectPrisma } from "./db/prisma.js";
 import { getOverviewTotals } from "./db/get-overview-totals.js";
 import { getInteractionsSummary } from "./db/get-interactions-summary.js";
 import { getPageViewsByPath } from "./db/get-page-views-by-path.js";
+import { getScrollDepthSummary } from "./db/get-scroll-depth-summary.js";
 import { saveAnalyticsEvents } from "./db/save-analytics-events.js";
 
 function parseSiteIdQuery(query: unknown): string | null {
@@ -133,6 +134,33 @@ app.get("/api/reports/interactions-summary", async (request, reply) => {
     return reply.status(500).send({
       ok: false,
       error: "REPORTING_INTERACTIONS_SUMMARY_FAILED",
+    });
+  }
+});
+
+app.get("/api/reports/scroll-depth-summary", async (request, reply) => {
+  const siteId = parseSiteIdQuery(request.query);
+
+  if (!siteId) {
+    return reply.status(400).send({
+      ok: false,
+      error: "INVALID_SITE_ID",
+    });
+  }
+
+  try {
+    const items = await getScrollDepthSummary(siteId);
+
+    return {
+      siteId,
+      items,
+    };
+  } catch (error) {
+    request.log.error({ err: error }, "Failed to load scroll depth summary");
+
+    return reply.status(500).send({
+      ok: false,
+      error: "REPORTING_SCROLL_DEPTH_SUMMARY_FAILED",
     });
   }
 });
