@@ -24,7 +24,7 @@ Use this file to understand:
 | Step | Title | Status |
 |------|-------|--------|
 | 5.1 | Reporting API overview endpoint | **Done** |
-| 5.2 | Dashboard API client | Not started |
+| 5.2 | Dashboard API client | **Done** |
 | 5.3 | Basic dashboard metrics UI | Not started |
 | 5.4 | Page views by path | Not started |
 | 5.5 | Clicks and conversions summary | Not started |
@@ -35,7 +35,7 @@ Use this file to understand:
 
 **End-to-end path after Phase 5 (goal):** same ingest path **plus** dashboard → reporting API → PostgreSQL aggregates → UI metrics.
 
-**Next recommended step:** Phase 5.2 — dashboard API client to call the overview endpoint.
+**Next recommended step:** Phase 5.3 — polish basic dashboard metrics UI (or split remaining report sections per 5.4–5.7).
 
 ### Phase 5.1 — Reporting API overview (done)
 
@@ -70,6 +70,33 @@ Use this file to understand:
 curl "http://localhost:4000/api/reports/overview?siteId=demo-site"
 curl "http://localhost:4000/api/reports/overview"
 curl "http://localhost:4000/api/reports/overview?siteId="
+```
+
+### Phase 5.2 — Dashboard API client (done)
+
+**Dashboard files:**
+
+- `apps/dashboard/src/lib/reports-config.ts` — `INGEST_API_BASE_URL` (default `http://localhost:4000`), `DEMO_SITE_ID`
+- `apps/dashboard/src/lib/reports-api.ts` — typed `fetchOverviewReport()`
+- `apps/dashboard/src/components/overview-report.tsx` — client component with loading / error / success UI
+
+**Fetch flow:** dashboard home → `OverviewReport` (client) → `GET /api/reports/overview?siteId=demo-site` → shows four totals.
+
+**Env override (optional):** `NEXT_PUBLIC_INGEST_API_URL` in `apps/dashboard/.env.local`.
+
+**Verify:**
+
+```bash
+docker compose up -d postgres
+npm run dev --workspace=@behavior-analytics/ingest-api
+npm run dev --workspace=@behavior-analytics/dashboard
+```
+
+Open http://localhost:3000 — expect brief loading, then totals. Stop ingest-api and reload — expect error message, not a crash.
+
+```bash
+npm run typecheck --workspace=@behavior-analytics/dashboard
+npm run typecheck --workspace=@behavior-analytics/ingest-api
 ```
 
 ---
@@ -479,7 +506,7 @@ Ingest API does **not** log request bodies.
 
 | Area | State |
 |------|--------|
-| Dashboard reports | Placeholder UI only; no live metrics |
+| Dashboard reports | Overview totals on home page (temporary UI); no charts or path breakdowns yet |
 | Reporting API | Overview totals only (`GET /api/reports/overview`); no path breakdowns or date filters yet |
 | Auth | None |
 | Rate limiting | None on ingest |

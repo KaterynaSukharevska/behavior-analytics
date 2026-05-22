@@ -1,3 +1,5 @@
+import { OverviewReport } from "../components/overview-report";
+
 export default function HomePage() {
   return (
     <main className="page">
@@ -28,7 +30,11 @@ export default function HomePage() {
         </ul>
       </section>
 
-      <p className="note">Reports and analytics views will be added later.</p>
+      <OverviewReport />
+
+      <p className="note">
+        Temporary overview section. Full dashboard design comes in later phases.
+      </p>
     </main>
   );
 }

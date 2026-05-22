@@ -66,3 +66,49 @@ body {
   margin-top: 1rem;
   color: #55627b;
 }
+
+.overview-report {
+  margin-top: 2rem;
+  background: #ffffff;
+  border: 1px solid #dbe3f0;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.overview-report h2 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.125rem;
+}
+
+.overview-report__message {
+  margin: 0;
+  color: #3d4960;
+}
+
+.overview-report__message--error {
+  color: #9b1c1c;
+}
+
+.overview-report__totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+
+.overview-report__totals div {
+  margin: 0;
+}
+
+.overview-report__totals dt {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #55627b;
+}
+
+.overview-report__totals dd {
+  margin: 0.25rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
