@@ -13,13 +13,16 @@ Use this file to understand:
 - privacy rules and known limitations,
 - recommended Phase 5 breakdown and the first implementation step (Phase 5.1).
 
-**Human smoke checklist (tracker):** [`docs/setup/tracker-local-smoke.en.md`](setup/tracker-local-smoke.en.md)
+**Human smoke checklists:**
+
+- Tracker + demo events: [`docs/setup/tracker-local-smoke.en.md`](setup/tracker-local-smoke.en.md)
+- Dashboard + reporting APIs: [`docs/setup/dashboard-reporting-smoke.en.md`](setup/dashboard-reporting-smoke.en.md)
 
 **Prior handoffs:** [`docs/phase-4-context.md`](phase-4-context.md), [`docs/phase-3-context.md`](phase-3-context.md), [`docs/phase-2-context.md`](phase-2-context.md)
 
 ---
 
-# Phase 5 Status — In Progress
+# Phase 5 Status — Complete
 
 | Step | Title | Status |
 |------|-------|--------|
@@ -32,13 +35,18 @@ Use this file to understand:
 | 5.5b | Dashboard interactions summary | **Done** |
 | 5.6a | Reporting API scroll depth summary | **Done** |
 | 5.6b | Dashboard scroll depth summary | **Done** |
-| 5.7 | Dashboard smoke docs | Not started |
+| 5.7 | Dashboard smoke docs | **Done** |
 
-**End-to-end path today (local):** demo site → tracker → ingest API → Zod validation → Prisma → PostgreSQL `analytics_events`.
+**End-to-end path (local, working):**
 
-**End-to-end path after Phase 5 (goal):** same ingest path **plus** dashboard → reporting API → PostgreSQL aggregates → UI metrics.
+```txt
+demo-site → tracker → ingest API → Zod → Prisma → PostgreSQL analytics_events
+  → reporting API endpoints → dashboard UI (localhost:3000)
+```
 
-**Next recommended step:** Phase 5.7 — dashboard smoke docs.
+**Portfolio smoke doc:** [`docs/setup/dashboard-reporting-smoke.en.md`](setup/dashboard-reporting-smoke.en.md)
+
+**Next recommended phase:** Phase 6 — polish, tests, deployment, portfolio packaging (see root `README.md` roadmap).
 
 ### Phase 5.1 — Reporting API overview (done)
 
@@ -309,6 +317,14 @@ Open http://localhost:3000 — all report sections including scroll depth. Stop 
 ```bash
 npm run typecheck --workspace=@behavior-analytics/dashboard
 ```
+
+### Phase 5.7 — Dashboard smoke docs (done)
+
+**Doc:** [`docs/setup/dashboard-reporting-smoke.en.md`](setup/dashboard-reporting-smoke.en.md)
+
+Covers: prerequisites, four-terminal startup, demo event generation, all four reporting `curl` checks, `INVALID_SITE_ID` errors, dashboard section checklist, ingest-api-down error behavior, end-to-end smoke pass checklist.
+
+**Verify:** follow the smoke doc top to bottom; confirm http://localhost:3000 shows live data in all sections.
 
 ---
 

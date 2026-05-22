@@ -20,6 +20,7 @@ docs/
   setup/
     local-development.en.md   General local setup
     tracker-local-smoke.en.md Tracker run + smoke checklist
+    dashboard-reporting-smoke.en.md Dashboard + reporting API smoke checklist
   product/
     product-definition.en.md
     product-definition.ru.md

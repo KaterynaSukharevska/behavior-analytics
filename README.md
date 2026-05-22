@@ -15,7 +15,7 @@ What currently works:
 - Fastify ingest API: `GET /api/health`, `POST /api/events` (validated, 256 KB limit)
 - Browser tracker SDK (`packages/tracker`): `page_view`, `click`, `scroll_depth`, `conversion`
 - Demo site (`localhost:3001`) integrated with the tracker; events flow to the database
-- Next.js dashboard (placeholder — reports not wired yet)
+- Next.js dashboard with overview, page views by path, interactions, and scroll depth reports
 
 ## Local Apps and Ports
 
@@ -137,4 +137,6 @@ Detailed docs live in the `docs/` folder:
 - [`docs/roadmap`](docs/roadmap) — roadmap and phasing
 - [`docs/setup`](docs/setup) — local development setup
 - [`docs/setup/tracker-local-smoke.en.md`](docs/setup/tracker-local-smoke.en.md) — tracker local run and smoke checklist
+- [`docs/setup/dashboard-reporting-smoke.en.md`](docs/setup/dashboard-reporting-smoke.en.md) — dashboard and reporting API smoke checklist
+- [`docs/phase-5-context.md`](docs/phase-5-context.md) — Phase 5 handoff (dashboard reports)
 - [`docs/phase-4-context.md`](docs/phase-4-context.md) — Phase 4 handoff (tracker + demo-site)
