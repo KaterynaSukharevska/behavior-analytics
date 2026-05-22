@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 import { IngestEventsRequestSchema } from "@behavior-analytics/analytics-core";
 import { disconnectPrisma } from "./db/prisma.js";
 import { getOverviewTotals } from "./db/get-overview-totals.js";
+import { getPageViewsByPath } from "./db/get-page-views-by-path.js";
 import { saveAnalyticsEvents } from "./db/save-analytics-events.js";
 
 function parseSiteIdQuery(query: unknown): string | null {
@@ -76,6 +77,33 @@ app.get("/api/reports/overview", async (request, reply) => {
     return reply.status(500).send({
       ok: false,
       error: "REPORTING_OVERVIEW_FAILED",
+    });
+  }
+});
+
+app.get("/api/reports/page-views-by-path", async (request, reply) => {
+  const siteId = parseSiteIdQuery(request.query);
+
+  if (!siteId) {
+    return reply.status(400).send({
+      ok: false,
+      error: "INVALID_SITE_ID",
+    });
+  }
+
+  try {
+    const items = await getPageViewsByPath(siteId);
+
+    return {
+      siteId,
+      items,
+    };
+  } catch (error) {
+    request.log.error({ err: error }, "Failed to load page views by path");
+
+    return reply.status(500).send({
+      ok: false,
+      error: "REPORTING_PAGE_VIEWS_BY_PATH_FAILED",
     });
   }
 });

@@ -26,7 +26,8 @@ Use this file to understand:
 | 5.1 | Reporting API overview endpoint | **Done** |
 | 5.2 | Dashboard API client | **Done** |
 | 5.3 | Basic dashboard metrics UI | **Done** |
-| 5.4 | Page views by path | Not started |
+| 5.4a | Reporting API page views by path | **Done** |
+| 5.4b | Dashboard page views by path | Not started |
 | 5.5 | Clicks and conversions summary | Not started |
 | 5.6 | Scroll depth summary | Not started |
 | 5.7 | Dashboard smoke docs | Not started |
@@ -35,7 +36,7 @@ Use this file to understand:
 
 **End-to-end path after Phase 5 (goal):** same ingest path **plus** dashboard → reporting API → PostgreSQL aggregates → UI metrics.
 
-**Next recommended step:** Phase 5.4 — page views by path (or Phase 5.7 dashboard smoke docs).
+**Next recommended step:** Phase 5.4b — dashboard page views by path UI (or Phase 5.5).
 
 ### Phase 5.1 — Reporting API overview (done)
 
@@ -124,6 +125,42 @@ Open http://localhost:3000 — four cards with numbers. Stop ingest-api, reload 
 
 ```bash
 npm run typecheck --workspace=@behavior-analytics/dashboard
+```
+
+### Phase 5.4a — Reporting API page views by path (done)
+
+**Endpoint:** `GET /api/reports/page-views-by-path?siteId=<siteId>`
+
+**Success (200):**
+
+```json
+{
+  "siteId": "demo-site",
+  "items": [
+    { "path": "/", "pageViews": 3 },
+    { "path": "/pricing", "pageViews": 1 }
+  ]
+}
+```
+
+**Rules:** `eventType = page_view` only; group by `path`; top 10 by `pageViews` descending.
+
+**Errors:**
+
+| Condition | HTTP | Body |
+|-----------|------|------|
+| Missing or blank `siteId` | `400` | `{ "ok": false, "error": "INVALID_SITE_ID" }` |
+| DB/query failure | `500` | `{ "ok": false, "error": "REPORTING_PAGE_VIEWS_BY_PATH_FAILED" }` |
+
+**Implementation:** `apps/ingest-api/src/server.ts` + `apps/ingest-api/src/db/get-page-views-by-path.ts`.
+
+**Verify:**
+
+```bash
+curl "http://localhost:4000/api/reports/page-views-by-path?siteId=demo-site"
+curl "http://localhost:4000/api/reports/page-views-by-path"
+curl "http://localhost:4000/api/reports/page-views-by-path?siteId="
+npm run typecheck --workspace=@behavior-analytics/ingest-api
 ```
 
 ---
