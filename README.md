@@ -1,142 +1,201 @@
 # Behavior Analytics MVP
 
-A lightweight behavior analytics tool for websites that helps teams understand engagement, clicks, scroll depth, traffic sources, and conversion drop-off.
+Behavior Analytics MVP is a privacy-conscious website behavior analytics product built as a local-first portfolio project.
 
-This is a real product-style MVP project built as a portfolio piece. It focuses on modern frontend and full-stack workflow: dashboard UI, a browser tracking SDK, event ingestion, reporting, privacy-safe defaults, and a fully local development environment.
+It includes a demo site, browser tracker SDK, Fastify ingest API, PostgreSQL raw event storage, reporting API endpoints, and a Next.js dashboard.
 
-## Current Status
+## Why This Project Exists
 
-**Tracker and ingest pipeline working locally.** Phases 1–4 are implemented for a portfolio MVP slice.
+This project demonstrates modern full-stack TypeScript product development for a realistic analytics workflow:
 
-What currently works:
+- browser analytics tracking with privacy constraints;
+- shared TypeScript contracts and Zod runtime validation;
+- Fastify API design with safe public errors;
+- PostgreSQL persistence through Prisma;
+- query-time reporting endpoints;
+- dashboard UI with loading, error, empty, and success states;
+- focused Vitest coverage for reporting and tracker privacy behavior.
 
-- npm workspaces monorepo with shared types and Zod validation
-- PostgreSQL via Docker Compose; events persisted with Prisma
-- Fastify ingest API: `GET /api/health`, `POST /api/events` (validated, 256 KB limit)
-- Browser tracker SDK (`packages/tracker`): `page_view`, `click`, `scroll_depth`, `conversion`
-- Demo site (`localhost:3001`) integrated with the tracker; events flow to the database
-- Next.js dashboard with overview, page views by path, interactions, and scroll depth reports
+It is intentionally presented as a portfolio/career project, not as a production SaaS.
 
-## Local Apps and Ports
+## Current Product Flow
 
-| Service        | URL                                  |
-| -------------- | ------------------------------------ |
-| Dashboard      | http://localhost:3000                 |
-| Demo Site      | http://localhost:3001                 |
-| Ingest API     | http://localhost:4000                 |
-| Health check   | http://localhost:4000/api/health      |
-| PostgreSQL     | localhost:5432                        |
+```txt
+demo-site
+  -> @behavior-analytics/tracker
+  -> POST /api/events
+  -> Zod validation
+  -> Prisma
+  -> PostgreSQL analytics_events
+  -> reporting API endpoints
+  -> dashboard API clients
+  -> dashboard UI
+```
+
+In plain language:
+
+1. The demo site emits safe behavior events.
+2. The tracker collects page views, clicks, scroll milestones, and explicit conversions.
+3. The ingest API validates incoming events.
+4. PostgreSQL stores validated raw events.
+5. Reporting endpoints aggregate stored events.
+6. The dashboard displays the reports.
 
 ## Tech Stack
 
-| Layer            | Technology                  |
-| ---------------- | --------------------------- |
-| Monorepo         | npm workspaces              |
-| Language         | TypeScript                  |
-| Dashboard        | Next.js, React              |
-| Demo Site        | Next.js, React              |
-| Ingest API       | Fastify                     |
-| Database         | PostgreSQL                  |
-| Infrastructure   | Docker Compose              |
-| Contracts        | TypeScript + Zod            |
-| DB toolkit       | Prisma                      |
-| Testing          | Vitest (analytics-core)     |
+| Area | Technology |
+|------|------------|
+| Monorepo | npm workspaces |
+| Language | TypeScript |
+| Dashboard | Next.js, React |
+| Demo site | Next.js, React |
+| Ingest API | Fastify |
+| Database | PostgreSQL via Docker Compose |
+| DB toolkit | Prisma |
+| Runtime validation | Zod |
+| Testing | Vitest |
+| API style | REST-first |
+
+The project does not use GraphQL or microfrontends.
+
+## Current Features
+
+- Page view tracking
+- Click tracking through explicit `data-analytics-id` attributes
+- Scroll depth tracking for 25%, 50%, 75%, and 100% milestones
+- Explicit conversion tracking
+- Zod event validation before persistence
+- PostgreSQL raw event persistence in `analytics_events`
+- Reporting endpoints for overview, page views by path, interactions, and scroll depth
+- Dashboard report sections for overview metrics, top paths, clicked elements, conversions, and scroll depth
+- Reporting helper tests
+- Reporting endpoint tests
+- Tracker privacy tests
+- Polished local dashboard UI using plain global CSS
+
+## Privacy Principles
+
+Privacy-safe tracking is a core constraint. The tracker does not collect:
+
+- form values;
+- names, emails, phone numbers, or message text;
+- arbitrary DOM text;
+- cookies or `localStorage` contents;
+- DOM snapshots;
+- session replay data.
+
+Click tracking only records safe explicit identifiers such as `data-analytics-id`. Conversions are explicit business events from code.
+
+## Local URLs
+
+| Service | URL |
+|---------|-----|
+| Dashboard | http://localhost:3000 |
+| Demo Site | http://localhost:3001 |
+| Ingest API | http://localhost:4000 |
+| Health | http://localhost:4000/api/health |
+| Events API | http://localhost:4000/api/events |
+| PostgreSQL | localhost:5432 |
+
+## Local Setup
+
+Prerequisites: Node.js 20+, npm, Docker, and Docker Compose.
+
+From the repository root:
+
+```bash
+npm install
+```
+
+Start PostgreSQL:
+
+```bash
+docker compose up -d postgres
+docker compose ps
+```
+
+Prepare Prisma if needed:
+
+```bash
+npm run db:generate
+npm run db:migrate
+```
+
+Run the local apps in separate terminals:
+
+```bash
+npm run dev --workspace=@behavior-analytics/ingest-api
+npm run dev --workspace=@behavior-analytics/dashboard
+npm run dev --workspace=@behavior-analytics/demo-site
+```
+
+Then open:
+
+- dashboard: http://localhost:3000
+- demo site: http://localhost:3001
+- health check: http://localhost:4000/api/health
+
+## Testing And Typechecks
+
+Current important checks:
+
+```bash
+npm run test -w @behavior-analytics/ingest-api
+npm run typecheck -w @behavior-analytics/ingest-api
+npm run test -w @behavior-analytics/tracker
+npm run typecheck -w @behavior-analytics/tracker
+npm run typecheck -w @behavior-analytics/dashboard
+```
+
+Useful Prisma checks:
+
+```bash
+npm run db:validate
+npm run db:status
+```
 
 ## Monorepo Structure
 
-```
+```txt
 apps/
-  dashboard/          Next.js dashboard
-  ingest-api/         Fastify event ingestion API
-  demo-site/          Next.js demo marketing site
+  dashboard/          Next.js dashboard UI
+  demo-site/          Next.js demo website that emits events
+  ingest-api/         Fastify event ingestion and reporting API
 
 packages/
   tracker/            Browser tracking SDK
   types/              Shared TypeScript event types
-  analytics-core/     Zod validation schemas + tests
-  config/             Shared config (placeholder)
+  analytics-core/     Zod validation schemas and tests
+  config/             Shared config placeholder
 
-docs/                 Product, architecture, roadmap, and setup docs
+prisma/               Prisma schema and migrations
+docs/                 Product, architecture, setup, and phase docs
+scripts/              Local helper scripts
 ```
 
-## Getting Started
+## Project Status
 
-Prerequisites: Node.js 20+, npm, Docker, Docker Compose.
+Current limitations are intentional for this local MVP:
 
-```bash
-# Install dependencies
-npm install
-
-# Start PostgreSQL
-docker compose up -d
-docker compose ps
-
-# Start the ingest API
-npm run dev --workspace=@behavior-analytics/ingest-api
-
-# Start the dashboard
-npm run dev --workspace=@behavior-analytics/dashboard
-
-# Start the demo site
-npm run dev --workspace=@behavior-analytics/demo-site
-```
-
-## MVP Scope
-
-Planned feature set for the MVP:
-
-- Page views and sessions
-- Click tracking
-- Scroll depth
-- Dwell time
-- Traffic sources and attribution
-- Custom conversion events
-- Dashboard reports
-- Demo website for end-to-end testing
-
-## Non-Goals
-
-The MVP intentionally excludes:
-
-- Session replay
-- Full enterprise heatmap engine
-- A/B testing platform
-- Billing or payments
-- Microfrontend architecture
-- GraphQL API
-
-## Privacy Principles
-
-Tracking is privacy-safe by design. The system will not collect:
-
-- Passwords or credentials
-- Raw form input values
-- Sensitive user-generated text
-- Full DOM snapshots
-- Session replay recordings
-
-Form fields are ignored by default via `data-analytics-ignore` attributes.
-
-## Roadmap
-
-| Phase | Focus                                          |
-| ----- | ---------------------------------------------- |
-| 1     | Local foundation (monorepo, Docker, apps)      |
-| 2     | Shared contracts and event schemas             |
-| 3     | Ingest API and database persistence            |
-| 4     | Tracker SDK                                    |
-| 5     | Dashboard reports                              |
-| 6     | Polish, tests, deployment, portfolio packaging |
+- no authentication yet;
+- no production deployment yet;
+- no charts yet;
+- no date filters yet;
+- no rate limiting yet;
+- no aggregation tables or materialized views yet;
+- no background jobs;
+- no batching or offline retry;
+- `session_start` and `session_end` are supported by shared types/schemas but are not emitted by the tracker yet.
 
 ## Documentation
 
-Detailed docs live in the `docs/` folder:
+Useful documentation:
 
-- [`docs/product`](docs/product) — product definition, domain model, event taxonomy
-- [`docs/architecture`](docs/architecture) — system architecture
-- [`docs/roadmap`](docs/roadmap) — roadmap and phasing
-- [`docs/setup`](docs/setup) — local development setup
-- [`docs/setup/tracker-local-smoke.en.md`](docs/setup/tracker-local-smoke.en.md) — tracker local run and smoke checklist
-- [`docs/setup/dashboard-reporting-smoke.en.md`](docs/setup/dashboard-reporting-smoke.en.md) — dashboard and reporting API smoke checklist
-- [`docs/phase-5-context.md`](docs/phase-5-context.md) — Phase 5 handoff (dashboard reports)
-- [`docs/phase-4-context.md`](docs/phase-4-context.md) — Phase 4 handoff (tracker + demo-site)
+- [`docs/README.md`](docs/README.md) — documentation index
+- [`docs/phase-6-context.md`](docs/phase-6-context.md) — current Phase 6 handoff
+- [`docs/architecture/architecture.en.md`](docs/architecture/architecture.en.md) — current technical architecture
+- [`docs/architecture/data-flow.en.md`](docs/architecture/data-flow.en.md) — event and reporting data flow
+- [`docs/architecture/privacy-security.en.md`](docs/architecture/privacy-security.en.md) — privacy and security rules
+- [`docs/setup/local-development.en.md`](docs/setup/local-development.en.md) — local setup notes
+- [`docs/setup/tracker-local-smoke.en.md`](docs/setup/tracker-local-smoke.en.md) — tracker smoke checklist
+- [`docs/setup/dashboard-reporting-smoke.en.md`](docs/setup/dashboard-reporting-smoke.en.md) — dashboard/reporting smoke checklist
