@@ -39,24 +39,26 @@ function PathTableSkeleton() {
 
 function PathTable({ items }: { items: PageViewsByPathReport["items"] }) {
   return (
-    <table className="path-table">
-      <thead>
-        <tr>
-          <th scope="col">Path</th>
-          <th scope="col">Page views</th>
-        </tr>
-      </thead>
-      <tbody>
-        {items.map((item) => (
-          <tr key={item.path}>
-            <td>
-              <code className="path-table__path">{item.path}</code>
-            </td>
-            <td className="path-table__count">{item.pageViews}</td>
+    <div className="path-table__wrapper">
+      <table className="path-table">
+        <thead>
+          <tr>
+            <th scope="col">Path</th>
+            <th scope="col">Page views</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.path}>
+              <td>
+                <code className="path-table__path">{item.path}</code>
+              </td>
+              <td className="path-table__count">{item.pageViews}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -93,10 +95,11 @@ export function PageViewsByPath() {
   return (
     <section className="metrics-panel" aria-label="Page views by path">
       <header className="metrics-panel__header">
+        <p className="metrics-panel__eyebrow">Traffic</p>
         <h2>Page views by path</h2>
         <p>
-          Top paths ranked by page views for the demo site ({DEMO_SITE_ID}).
-          Navigate the demo site to add more paths.
+          Top paths ranked by page views for the demo site ({DEMO_SITE_ID}), up
+          to the ten most viewed paths.
         </p>
       </header>
 

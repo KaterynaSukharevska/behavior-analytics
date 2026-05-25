@@ -7,36 +7,56 @@ export default function HomePage() {
   return (
     <main className="page">
       <section className="hero">
-        <h1>Behavior Analytics</h1>
-        <p>
-          Lightweight website behavior analytics for engagement, clicks, scroll
-          depth, and conversion drop-off.
-        </p>
+        <p className="hero__eyebrow">Local analytics MVP</p>
+        <div className="hero__content">
+          <div>
+            <h1>Behavior Analytics Dashboard</h1>
+            <p>
+              A privacy-first dashboard for the demo site, showing page views,
+              clicks, scroll depth, and conversions from the local ingest API.
+            </p>
+          </div>
+          <div className="hero__meta" aria-label="dashboard scope">
+            <span>REST reports</span>
+            <span>PostgreSQL events</span>
+            <span>No charts yet</span>
+          </div>
+        </div>
       </section>
 
       <section className="status-card" aria-label="service status">
-        <h2>Current Status</h2>
-        <ul>
-          <li>
-            <strong>Dashboard:</strong> ready
-          </li>
-          <li>
-            <strong>Ingest API:</strong> available at
-            {" "}
+        <div className="status-card__header">
+          <h2>Local system status</h2>
+          <p>Use these services together to generate and view live demo data.</p>
+        </div>
+        <div className="status-card__grid">
+          <article className="status-card__item">
+            <span className="status-card__label">Dashboard</span>
+            <strong>Ready</strong>
+            <span>http://localhost:3000</span>
+          </article>
+          <article className="status-card__item">
+            <span className="status-card__label">Ingest API</span>
+            <strong>Health check</strong>
             <a href="http://localhost:4000/api/health">
-              http://localhost:4000/api/health
+              localhost:4000/api/health
             </a>
-          </li>
-          <li>
-            <strong>PostgreSQL:</strong> running via Docker
-          </li>
-        </ul>
+          </article>
+          <article className="status-card__item">
+            <span className="status-card__label">Database</span>
+            <strong>PostgreSQL</strong>
+            <span>Docker Compose on localhost:5432</span>
+          </article>
+        </div>
       </section>
 
       <OverviewReport />
-      <PageViewsByPath />
-      <InteractionsSummary />
-      <ScrollDepthSummary />
+
+      <div className="dashboard-reports" aria-label="Detailed reports">
+        <PageViewsByPath />
+        <InteractionsSummary />
+        <ScrollDepthSummary />
+      </div>
     </main>
   );
 }

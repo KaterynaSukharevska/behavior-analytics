@@ -15,13 +15,34 @@ type LoadState =
 
 const METRIC_CARDS: {
   label: string;
+  helper: string;
   key: keyof OverviewTotals;
 }[] = [
-  { label: "Page views", key: "pageViews" },
-  { label: "Clicks", key: "clicks" },
-  { label: "Scroll depth events", key: "scrollDepthEvents" },
-  { label: "Conversions", key: "conversions" },
+  {
+    label: "Page views",
+    helper: "Tracked page_view events",
+    key: "pageViews",
+  },
+  {
+    label: "Clicks",
+    helper: "Tracked data-analytics-id clicks",
+    key: "clicks",
+  },
+  {
+    label: "Scroll depth",
+    helper: "Milestone events at 25–100%",
+    key: "scrollDepthEvents",
+  },
+  {
+    label: "Conversions",
+    helper: "Explicit business events",
+    key: "conversions",
+  },
 ];
+
+function formatMetricValue(value: number): string {
+  return new Intl.NumberFormat("en-US").format(value);
+}
 
 function isEmptyTotals(totals: OverviewTotals): boolean {
   return (
@@ -51,7 +72,10 @@ function MetricCards({ totals }: { totals: OverviewTotals }) {
       {METRIC_CARDS.map((card) => (
         <article key={card.key} className="metric-card">
           <h3 className="metric-card__label">{card.label}</h3>
-          <p className="metric-card__value">{totals[card.key]}</p>
+          <p className="metric-card__value">
+            {formatMetricValue(totals[card.key])}
+          </p>
+          <p className="metric-card__helper">{card.helper}</p>
         </article>
       ))}
     </div>
@@ -91,10 +115,11 @@ export function OverviewReport() {
   return (
     <section className="metrics-panel" aria-label="Demo site metrics">
       <header className="metrics-panel__header">
-        <h2>Demo site metrics</h2>
+        <p className="metrics-panel__eyebrow">Overview</p>
+        <h2>Demo site activity</h2>
         <p>
-          This dashboard shows behavior analytics collected from the demo site
-          ({DEMO_SITE_ID}). Browse{" "}
+          Current totals for behavior analytics collected from the demo site (
+          {DEMO_SITE_ID}). Browse{" "}
           <a href="http://localhost:3001">localhost:3001</a> to generate new
           events.
         </p>

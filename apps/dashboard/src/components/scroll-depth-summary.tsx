@@ -47,22 +47,26 @@ function ScrollDepthTable({
   items: ScrollDepthSummaryReport["items"];
 }) {
   return (
-    <table className="path-table">
-      <thead>
-        <tr>
-          <th scope="col">Depth</th>
-          <th scope="col">Events</th>
-        </tr>
-      </thead>
-      <tbody>
-        {items.map((item) => (
-          <tr key={item.depthPercent}>
-            <td className="path-table__count">{formatDepthLabel(item.depthPercent)}</td>
-            <td className="path-table__count">{item.events}</td>
+    <div className="path-table__wrapper">
+      <table className="path-table">
+        <thead>
+          <tr>
+            <th scope="col">Depth</th>
+            <th scope="col">Events</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.depthPercent}>
+              <td className="path-table__count">
+                {formatDepthLabel(item.depthPercent)}
+              </td>
+              <td className="path-table__count">{item.events}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -99,12 +103,13 @@ export function ScrollDepthSummary() {
   return (
     <section className="metrics-panel" aria-label="Scroll depth summary">
       <header className="metrics-panel__header">
+        <p className="metrics-panel__eyebrow">Scroll</p>
         <h2>Scroll depth summary</h2>
         <p>
           Scroll milestones reached on the demo site ({DEMO_SITE_ID}). Scroll
           through a long page on{" "}
-          <a href="http://localhost:3001">localhost:3001</a> to trigger 25%, 50%,
-          75%, and 100% depth events.
+          <a href="http://localhost:3001">localhost:3001</a> to trigger 25%,
+          50%, 75%, and 100% depth events.
         </p>
       </header>
 

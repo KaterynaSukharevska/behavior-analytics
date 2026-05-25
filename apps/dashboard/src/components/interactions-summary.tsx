@@ -49,47 +49,51 @@ function InteractionsTableSkeleton({
 
 function ClicksTable({ items }: { items: ClickSummaryItem[] }) {
   return (
-    <table className="path-table">
-      <thead>
-        <tr>
-          <th scope="col">Element ID</th>
-          <th scope="col">Clicks</th>
-        </tr>
-      </thead>
-      <tbody>
-        {items.map((item) => (
-          <tr key={item.elementId}>
-            <td>
-              <code className="path-table__path">{item.elementId}</code>
-            </td>
-            <td className="path-table__count">{item.clicks}</td>
+    <div className="path-table__wrapper">
+      <table className="path-table">
+        <thead>
+          <tr>
+            <th scope="col">Element ID</th>
+            <th scope="col">Clicks</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.elementId}>
+              <td>
+                <code className="path-table__path">{item.elementId}</code>
+              </td>
+              <td className="path-table__count">{item.clicks}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
 function ConversionsTable({ items }: { items: ConversionSummaryItem[] }) {
   return (
-    <table className="path-table">
-      <thead>
-        <tr>
-          <th scope="col">Conversion name</th>
-          <th scope="col">Conversions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {items.map((item) => (
-          <tr key={item.conversionName}>
-            <td>
-              <code className="path-table__path">{item.conversionName}</code>
-            </td>
-            <td className="path-table__count">{item.conversions}</td>
+    <div className="path-table__wrapper">
+      <table className="path-table">
+        <thead>
+          <tr>
+            <th scope="col">Conversion name</th>
+            <th scope="col">Conversions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.conversionName}>
+              <td>
+                <code className="path-table__path">{item.conversionName}</code>
+              </td>
+              <td className="path-table__count">{item.conversions}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -124,13 +128,17 @@ export function InteractionsSummary() {
   }, []);
 
   return (
-    <section className="metrics-panel" aria-label="Interactions summary">
+    <section
+      className="metrics-panel metrics-panel--wide"
+      aria-label="Interactions summary"
+    >
       <header className="metrics-panel__header">
+        <p className="metrics-panel__eyebrow">Engagement</p>
         <h2>Interactions summary</h2>
         <p>
           Top clicked elements and conversions for the demo site ({DEMO_SITE_ID}
-          ). Click CTAs with <code>data-analytics-id</code> or trigger conversion
-          events on the demo site to populate this section.
+          ). Click CTAs with <code>data-analytics-id</code> or trigger
+          conversion events on the demo site to populate this section.
         </p>
       </header>
 
