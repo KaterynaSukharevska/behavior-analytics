@@ -8,7 +8,7 @@ Use this file to understand:
 
 - what the project is and where it stands after Phases 1–5;
 - what Phase 6 is for;
-- what Phase 6.1 and 6.2 completed;
+- what Phase 6.1, 6.2, and 6.3 completed;
 - which files matter for the next testing work;
 - the recommended order for the remaining Phase 6 milestones.
 
@@ -20,12 +20,12 @@ Use this file to understand:
 |------|-------|--------|
 | 6.1 | Reporting helpers tests | **Done** |
 | 6.2 | Reporting endpoint tests | **Done** |
-| 6.3 | Tracker privacy tests / review | Recommended next |
-| 6.4 | Dashboard UI polish | Not started |
+| 6.3 | Tracker privacy tests / review | **Done** |
+| 6.4 | Dashboard UI polish | Recommended next |
 | 6.5 | README / portfolio packaging | Not started |
 | 6.6 | Deployment planning | Not started |
 
-**Best immediate next task:** Phase 6.3 — Tracker privacy tests / review.
+**Best immediate next task:** Phase 6.4 — Dashboard UI polish.
 
 ---
 
@@ -181,9 +181,40 @@ Phase 6.2 verification result: **2 test files, 18 tests passing**.
 
 ---
 
-# 7. Verified Commands
+# 7. Phase 6.3 Completed Status
 
-Phase 6.1 and 6.2 verification:
+Phase 6.3 added focused privacy tests for the tracker SDK.
+
+Files changed in Phase 6.3:
+
+- `packages/tracker/src/privacy.test.ts` added
+- `packages/tracker/package.json` updated with a tracker test script and Vitest dev dependency
+- `package-lock.json` updated for the tracker Vitest declaration
+
+Tracker privacy tests were added for:
+
+- click tracking sends `data-analytics-id` without DOM text
+- `data-analytics-ignore` is ignored
+- `data-private` is ignored
+- inputs, textareas, and selects are ignored
+- payloads do not include form values
+- payloads do not include cookies
+- payloads do not include `localStorage` data
+- conversions send explicit names and safe optional metadata only
+- page views do not collect arbitrary page text
+
+Review result:
+
+- no privacy issue was found
+- no tracker runtime/source behavior was changed
+
+Phase 6.3 verification result: **1 test file, 8 tests passing**.
+
+---
+
+# 8. Verified Commands
+
+Phase 6.1 and 6.2 ingest API verification:
 
 ```bash
 npm run test -w @behavior-analytics/ingest-api
@@ -192,9 +223,18 @@ npm run typecheck -w @behavior-analytics/ingest-api
 
 Both commands passed after the Phase 6.2 changes.
 
+Phase 6.3 tracker verification:
+
+```bash
+npm run test -w @behavior-analytics/tracker
+npm run typecheck -w @behavior-analytics/tracker
+```
+
+Both commands passed after the Phase 6.3 changes.
+
 ---
 
-# 8. Current Important Files
+# 9. Current Important Files
 
 ## Reporting Helpers
 
@@ -207,6 +247,10 @@ Both commands passed after the Phase 6.2 changes.
 
 - `apps/ingest-api/src/db/reports.test.ts`
 - `apps/ingest-api/src/reports-routes.test.ts`
+
+## Tracker Privacy Tests
+
+- `packages/tracker/src/privacy.test.ts`
 
 ## Fastify Server and Routes
 
@@ -246,33 +290,33 @@ Current reporting routes live in `apps/ingest-api/src/app.ts` through `buildApp(
 
 ---
 
-# 9. Recommended Next Phase 6 Order
+# 10. Recommended Next Phase 6 Order
 
-1. **6.3 — Tracker privacy tests / review**
-2. **6.4 — Dashboard UI polish**
-3. **6.5 — README / portfolio packaging**
-4. **6.6 — Deployment planning**
+1. **6.4 — Dashboard UI polish**
+2. **6.5 — README / portfolio packaging**
+3. **6.6 — Deployment planning**
 
 Keep each milestone small. Do not combine endpoint tests, tracker privacy review, dashboard polish, and deployment planning in one task.
 
 ---
 
-# 10. Best Immediate Next Task
+# 11. Best Immediate Next Task
 
-**Phase 6.3 — Tracker privacy tests / review.**
+**Phase 6.4 — Dashboard UI polish.**
 
 Recommended scope:
 
-- Review tracker privacy rules against current implementation
-- Add focused tests where useful for click tracking, form-field exclusion, `data-private`, `data-analytics-ignore`, and conversion payload safety
-- Confirm tracker does not collect form values, arbitrary DOM text, cookies, `localStorage`, DOM snapshots, or session replay data
-- Keep the scope limited to privacy behavior and tests
+- improve dashboard visual polish without introducing a new styling framework
+- preserve existing report sections and API clients
+- keep loading, error, empty, and success states for every reporting section
+- avoid charts unless explicitly requested
+- keep the UI beginner-readable and portfolio-friendly
 
-Phase 6.3 should strengthen confidence in the privacy-first tracker behavior without changing product scope.
+Phase 6.4 should improve presentation quality while keeping the current plain CSS architecture.
 
 ---
 
-# 11. Guardrails
+# 12. Guardrails
 
 Do **not** start these yet unless explicitly requested:
 
@@ -292,7 +336,7 @@ Also avoid adding dependencies unless there is a clear, small testing need that 
 
 ---
 
-# 12. Project Philosophy
+# 13. Project Philosophy
 
 - Keep phases small.
 - One Cursor task = one small milestone.
