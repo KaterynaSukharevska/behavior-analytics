@@ -8,9 +8,9 @@ Use this file to understand:
 
 - what the project is and where it stands after Phases 1–5;
 - what Phase 6 is for;
-- what Phase 6.1, 6.2, 6.3, and 6.4 completed;
-- which files matter for the next testing work;
-- the recommended order for the remaining Phase 6 milestones.
+- what Phase 6 completed;
+- which files matter for future work;
+- recommended options for Phase 7.
 
 ---
 
@@ -22,10 +22,12 @@ Use this file to understand:
 | 6.2 | Reporting endpoint tests | **Done** |
 | 6.3 | Tracker privacy tests / review | **Done** |
 | 6.4 | Dashboard UI polish | **Done** |
-| 6.5 | README / portfolio packaging | Recommended next |
-| 6.6 | Deployment planning | Not started |
+| 6.5 | README / portfolio packaging | **Done** |
+| 6.6 | Deployment planning | **Done** |
 
-**Best immediate next task:** Phase 6.5 — README / portfolio packaging.
+**Phase 6 final status:** **Complete.**
+
+**Recommended next phase:** Phase 7 should be chosen deliberately based on the portfolio goal.
 
 ---
 
@@ -257,7 +259,82 @@ Phase 6.4 verification:
 
 ---
 
-# 9. Verified Commands
+# 9. Phase 6.5 Completed Status
+
+Phase 6.5 improved the main README and portfolio-facing documentation.
+
+Files changed in Phase 6.5:
+
+- `README.md` updated
+- `docs/README.md` updated
+
+README improvements included:
+
+- clearer project summary and purpose
+- current product flow
+- current tech stack
+- current features
+- privacy principles
+- local URLs and setup
+- important test/typecheck commands
+- current limitations
+- useful documentation links
+
+Scope confirmation:
+
+- no source changes
+- no test changes
+- no dependency changes
+- no production/deployment claims
+
+---
+
+# 10. Phase 6.6 Completed Status
+
+Phase 6.6 added a practical deployment planning document without implementing deployment.
+
+Files changed in Phase 6.6:
+
+- `docs/deployment/deployment-plan.en.md` added
+- `docs/README.md` updated with a deployment plan link
+
+Deployment plan sections include:
+
+- current local architecture
+- recommended simple deployment path
+- required environment variables
+- deployment order
+- deployment smoke checklist
+- risks and future hardening
+- clear "not implemented yet" scope note
+
+Scope confirmation:
+
+- no deployment config files added
+- no source changes
+- no test changes
+- no dependency changes
+- deployment is still not implemented
+- production readiness is not claimed
+
+---
+
+# 11. Phase 6 Final Summary
+
+Phase 6 strengthened the MVP without adding large new product features.
+
+Completed work:
+
+- **6.1 Reporting helper tests** — added focused tests for overview totals, page views by path, interactions summary, and scroll depth summary helpers.
+- **6.2 Reporting endpoint tests** — added Fastify endpoint tests for the four reporting API routes and extracted `buildApp()` for testability.
+- **6.3 Tracker privacy tests** — added focused tracker tests for click privacy, ignored/private/form elements, safe conversions, page views, and absence of sensitive data in payloads.
+- **6.4 Dashboard UI polish** — improved dashboard presentation, spacing, status cards, metric cards, tables, responsive behavior, and preserved all loading/error/empty/success states.
+- **6.5 README / portfolio packaging** — updated the root README and docs index to explain the current MVP, local workflow, privacy posture, tests, limitations, and useful docs.
+- **6.6 Deployment planning** — added a future deployment plan without implementing deployment or claiming production readiness.
+
+---
+
+# 12. Current Verification Commands
 
 Phase 6.1 and 6.2 ingest API verification:
 
@@ -285,9 +362,54 @@ npm run typecheck -w @behavior-analytics/dashboard
 
 This command passed after the Phase 6.4 changes. The dashboard package currently has no test script.
 
+Additional useful checks:
+
+```bash
+npm run db:validate
+npm run db:status
+```
+
 ---
 
-# 10. Current Important Files
+# 13. Current Portfolio Strengths
+
+The project is now strong as a portfolio MVP because it demonstrates:
+
+- privacy-conscious tracker behavior
+- validated event ingestion with Zod
+- persisted analytics events in PostgreSQL
+- reporting API endpoints over raw events
+- polished dashboard UI with real report data
+- focused reporting helper tests
+- focused reporting endpoint tests
+- focused tracker privacy tests
+- clear README and documentation index
+- practical deployment plan
+- REST-first architecture
+- beginner-readable TypeScript structure
+
+---
+
+# 14. Current Limitations
+
+Current limitations remain explicit and intentional:
+
+- no auth
+- no rate limiting
+- no deployed environment yet
+- no charts
+- no date filters
+- no CI/CD
+- no aggregation tables or materialized views
+- no background jobs
+- no batching/offline retry
+- no production CORS hardening
+- no retention policy
+- `session_start` and `session_end` are supported by shared types/schemas but are not emitted by the tracker yet
+
+---
+
+# 15. Current Important Files
 
 ## Reporting Helpers
 
@@ -331,6 +453,7 @@ Current reporting routes live in `apps/ingest-api/src/app.ts` through `buildApp(
 - `docs/README.md`
 - `docs/phase-5-context.md`
 - `docs/phase-6-context.md`
+- `docs/deployment/deployment-plan.en.md`
 - `docs/setup/dashboard-reporting-smoke.en.md`
 - `docs/architecture/architecture.en.md`
 - `docs/architecture/data-flow.en.md`
@@ -343,33 +466,27 @@ Current reporting routes live in `apps/ingest-api/src/app.ts` through `buildApp(
 
 ---
 
-# 11. Recommended Next Phase 6 Order
+# 16. Recommended Phase 7 Options
 
-1. **6.5 — README / portfolio packaging**
-2. **6.6 — Deployment planning**
+Phase 7 should be chosen deliberately. Good options:
 
-Keep each milestone small. Do not combine endpoint tests, tracker privacy review, dashboard polish, and deployment planning in one task.
+| Option | Focus | Why choose it |
+|--------|-------|---------------|
+| A | Screenshots / demo polish | Best if the next goal is GitHub, CV, LinkedIn, or interview presentation |
+| B | Simple charts | Best if the dashboard should feel more like an analytics product, but keep scope small |
+| C | Basic CI | Best if the next goal is engineering reliability and automated checks |
+| D | Actual deployment | Best if a live demo URL is the top priority |
+| E | Auth / rate-limiting hardening | Best if moving toward production-like behavior |
 
----
+Recommended default: **Phase 7A — screenshots / demo polish** or **Phase 7C — basic CI**.
 
-# 12. Best Immediate Next Task
-
-**Phase 6.5 — README / portfolio packaging.**
-
-Recommended scope:
-
-- update README and portfolio-facing docs to reflect the current MVP
-- describe the actual local product loop and completed Phase 6 test/polish work
-- keep claims factual: no auth, no charts, no deployment, no production SaaS positioning
-- make setup, verification, and project value clear for reviewers/interviewers
-
-Phase 6.5 should package the project clearly for GitHub, CV, LinkedIn, and technical interviews.
+Choose **actual deployment** only after accepting the extra setup work called out in `docs/deployment/deployment-plan.en.md`, especially making the demo-site tracker endpoint configurable.
 
 ---
 
-# 13. Guardrails
+# 17. Guardrails
 
-Do **not** start these yet unless explicitly requested:
+Do **not** start these unless explicitly selected for Phase 7:
 
 - charts
 - auth
@@ -383,11 +500,9 @@ Do **not** start these yet unless explicitly requested:
 - broad rewrites
 - enterprise architecture
 
-Also avoid adding dependencies unless there is a clear, small testing need that cannot be solved with existing tools.
-
 ---
 
-# 14. Project Philosophy
+# 18. Project Philosophy
 
 - Keep phases small.
 - One Cursor task = one small milestone.
