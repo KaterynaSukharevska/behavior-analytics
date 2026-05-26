@@ -20,6 +20,7 @@ Behavior Analytics MVP is a local-first portfolio project with:
 - [`setup/dashboard-reporting-smoke.en.md`](setup/dashboard-reporting-smoke.en.md) — dashboard/reporting smoke checklist
 - [`ai/cursor-working-rules.md`](ai/cursor-working-rules.md) — short working rules for Cursor agents
 - [`deployment/deployment-plan.en.md`](deployment/deployment-plan.en.md) — future deployment planning notes
+- [`phase-7-context.md`](phase-7-context.md) — current Phase 7 handoff for CI and portfolio polish
 - [`phase-6-context.md`](phase-6-context.md) — current Phase 6 handoff for polish, tests, and portfolio readiness
 - [`phase-5-context.md`](phase-5-context.md) — dashboard reporting foundation handoff
 
@@ -86,5 +87,6 @@ Some product docs include future concepts such as users/workspaces/projects. The
 - [`phase-4-context.md`](phase-4-context.md) — tracker SDK and demo-site integration
 - [`phase-5-context.md`](phase-5-context.md) — dashboard reporting foundation
 - [`phase-6-context.md`](phase-6-context.md) — polish, tests, and portfolio readiness
+- [`phase-7-context.md`](phase-7-context.md) — CI, README polish, and simple dashboard charts
 
 Phase handoffs are useful implementation history. For stable current conventions, prefer the architecture docs above.
