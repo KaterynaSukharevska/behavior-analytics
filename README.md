@@ -1,6 +1,8 @@
 # Behavior Analytics MVP
 
-Behavior Analytics MVP is a privacy-conscious website behavior analytics product built as a local-first portfolio project.
+[![CI](https://github.com/KaterynaSukharevska/behavior-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/KaterynaSukharevska/behavior-analytics/actions/workflows/ci.yml)
+
+Behavior Analytics MVP is a privacy-conscious website behavior analytics product built as a local-first portfolio/career project.
 
 It includes a demo site, browser tracker SDK, Fastify ingest API, PostgreSQL raw event storage, reporting API endpoints, and a Next.js dashboard.
 
@@ -15,6 +17,7 @@ This project demonstrates modern full-stack TypeScript product development for a
 - query-time reporting endpoints;
 - dashboard UI with loading, error, empty, and success states;
 - focused Vitest coverage for reporting and tracker privacy behavior.
+- basic GitHub Actions CI for pull requests and pushes to `main`.
 
 It is intentionally presented as a portfolio/career project, not as a production SaaS.
 
