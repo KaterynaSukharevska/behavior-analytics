@@ -62,6 +62,42 @@ function PathTable({ items }: { items: PageViewsByPathReport["items"] }) {
   );
 }
 
+function PageViewsBarChart({
+  items,
+}: {
+  items: PageViewsByPathReport["items"];
+}) {
+  const maxPageViews = Math.max(0, ...items.map((item) => item.pageViews));
+
+  return (
+    <div className="bar-chart" aria-label="Page views by path chart">
+      {items.map((item) => {
+        const barWidth =
+          maxPageViews > 0 ? (item.pageViews / maxPageViews) * 100 : 0;
+
+        return (
+          <div
+            key={item.path}
+            className="bar-chart__row"
+            aria-label={`${item.path}: ${item.pageViews} page views`}
+          >
+            <div className="bar-chart__label-row">
+              <code className="bar-chart__label">{item.path}</code>
+              <span className="bar-chart__value">{item.pageViews}</span>
+            </div>
+            <div className="bar-chart__track" aria-hidden="true">
+              <div
+                className="bar-chart__bar"
+                style={{ width: `${barWidth}%` }}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function PageViewsByPath() {
   const [state, setState] = useState<LoadState>({ status: "loading" });
 
@@ -132,7 +168,10 @@ export function PageViewsByPath() {
       )}
 
       {state.status === "success" && state.report.items.length > 0 && (
-        <PathTable items={state.report.items} />
+        <>
+          <PageViewsBarChart items={state.report.items} />
+          <PathTable items={state.report.items} />
+        </>
       )}
     </section>
   );

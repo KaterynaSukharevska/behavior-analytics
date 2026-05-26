@@ -70,6 +70,45 @@ function ScrollDepthTable({
   );
 }
 
+function ScrollDepthBarChart({
+  items,
+}: {
+  items: ScrollDepthSummaryReport["items"];
+}) {
+  const maxEvents = Math.max(0, ...items.map((item) => item.events));
+
+  return (
+    <div className="bar-chart" aria-label="Scroll depth milestone chart">
+      {items.map((item) => {
+        const barWidth = maxEvents > 0 ? (item.events / maxEvents) * 100 : 0;
+
+        return (
+          <div
+            key={item.depthPercent}
+            className="bar-chart__row"
+            aria-label={`${formatDepthLabel(item.depthPercent)} scroll depth: ${
+              item.events
+            } events`}
+          >
+            <div className="bar-chart__label-row">
+              <span className="bar-chart__label">
+                {formatDepthLabel(item.depthPercent)}
+              </span>
+              <span className="bar-chart__value">{item.events}</span>
+            </div>
+            <div className="bar-chart__track" aria-hidden="true">
+              <div
+                className="bar-chart__bar"
+                style={{ width: `${barWidth}%` }}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ScrollDepthSummary() {
   const [state, setState] = useState<LoadState>({ status: "loading" });
 
@@ -143,7 +182,10 @@ export function ScrollDepthSummary() {
       )}
 
       {state.status === "success" && state.report.items.length > 0 && (
-        <ScrollDepthTable items={state.report.items} />
+        <>
+          <ScrollDepthBarChart items={state.report.items} />
+          <ScrollDepthTable items={state.report.items} />
+        </>
       )}
     </section>
   );

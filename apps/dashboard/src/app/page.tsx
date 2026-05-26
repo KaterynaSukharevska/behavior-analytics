@@ -19,7 +19,7 @@ export default function HomePage() {
           <div className="hero__meta" aria-label="dashboard scope">
             <span>REST reports</span>
             <span>PostgreSQL events</span>
-            <span>No charts yet</span>
+            <span>Simple charts</span>
           </div>
         </div>
       </section>
