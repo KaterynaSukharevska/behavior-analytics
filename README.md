@@ -137,14 +137,21 @@ Then open:
 
 ## Testing And Typechecks
 
-Current important checks:
+Basic GitHub Actions CI runs on pull requests and pushes to `main` with Node.js 20 and `npm ci`.
+
+Current CI checks:
 
 ```bash
-npm run test -w @behavior-analytics/ingest-api
-npm run typecheck -w @behavior-analytics/ingest-api
-npm run test -w @behavior-analytics/tracker
+npm run db:generate
+npm run typecheck -w @behavior-analytics/types
+npm run typecheck -w @behavior-analytics/analytics-core
 npm run typecheck -w @behavior-analytics/tracker
+npm run typecheck -w @behavior-analytics/ingest-api
 npm run typecheck -w @behavior-analytics/dashboard
+npm run typecheck -w @behavior-analytics/demo-site
+npm run test -w @behavior-analytics/analytics-core
+npm run test -w @behavior-analytics/tracker
+npm run test -w @behavior-analytics/ingest-api
 ```
 
 Useful Prisma checks:

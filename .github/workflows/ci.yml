@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  verify:
+    name: Verify monorepo
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Typecheck packages
+        run: |
+          npm run typecheck -w @behavior-analytics/types
+          npm run typecheck -w @behavior-analytics/analytics-core
+          npm run typecheck -w @behavior-analytics/tracker
+
+      - name: Typecheck apps
+        run: |
+          npm run typecheck -w @behavior-analytics/ingest-api
+          npm run typecheck -w @behavior-analytics/dashboard
+          npm run typecheck -w @behavior-analytics/demo-site
+
+      - name: Run tests
+        run: |
+          npm run test -w @behavior-analytics/analytics-core
+          npm run test -w @behavior-analytics/tracker
+          npm run test -w @behavior-analytics/ingest-api
