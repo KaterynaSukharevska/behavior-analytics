@@ -18,6 +18,7 @@ Behavior Analytics MVP is a local-first portfolio project with:
 - [`setup/local-development.en.md`](setup/local-development.en.md) — local setup notes
 - [`setup/tracker-local-smoke.en.md`](setup/tracker-local-smoke.en.md) — tracker/demo-site smoke checklist
 - [`setup/dashboard-reporting-smoke.en.md`](setup/dashboard-reporting-smoke.en.md) — dashboard/reporting smoke checklist
+- [`ai/cursor-working-rules.md`](ai/cursor-working-rules.md) — short working rules for Cursor agents
 - [`deployment/deployment-plan.en.md`](deployment/deployment-plan.en.md) — future deployment planning notes
 - [`phase-6-context.md`](phase-6-context.md) — current Phase 6 handoff for polish, tests, and portfolio readiness
 - [`phase-5-context.md`](phase-5-context.md) — dashboard reporting foundation handoff
@@ -69,6 +70,12 @@ Some product docs include future concepts such as users/workspaces/projects. The
 ## Deployment Docs
 
 - [`deployment/deployment-plan.en.md`](deployment/deployment-plan.en.md) — plan only; deployment is not implemented yet
+
+---
+
+## AI Agent Docs
+
+- [`ai/cursor-working-rules.md`](ai/cursor-working-rules.md) — concise project rules for Cursor agents
 
 ---
 
