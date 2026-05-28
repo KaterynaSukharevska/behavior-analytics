@@ -6,6 +6,18 @@ Behavior Analytics MVP is a privacy-conscious website behavior analytics product
 
 It includes a demo site, browser tracker SDK, Fastify ingest API, PostgreSQL raw event storage, reporting API endpoints, and a Next.js dashboard.
 
+## What This Project Demonstrates
+
+- full-stack TypeScript application structure across frontend, backend, and shared packages;
+- privacy-conscious tracker SDK design;
+- Fastify ingest API and REST reporting endpoints;
+- Zod runtime validation at API boundaries;
+- Prisma/PostgreSQL persistence for analytics events;
+- Next.js dashboard reporting UI;
+- CSS-only visual reporting for page views and scroll depth;
+- Vitest tests and GitHub Actions CI checks;
+- phased MVP delivery with clear scope boundaries.
+
 ## Why This Project Exists
 
 This project demonstrates modern full-stack TypeScript product development for a realistic analytics workflow:
@@ -19,9 +31,9 @@ This project demonstrates modern full-stack TypeScript product development for a
 - focused Vitest coverage for reporting and tracker privacy behavior.
 - basic GitHub Actions CI for pull requests and pushes to `main`.
 
-It is intentionally presented as a portfolio/career project, not as a production SaaS.
+It is intentionally presented as a local-first portfolio/career project, not as a production SaaS.
 
-## Current Product Flow
+## Implemented Flow
 
 ```txt
 demo-site
@@ -43,6 +55,10 @@ In plain language:
 4. PostgreSQL stores validated raw events.
 5. Reporting endpoints aggregate stored events.
 6. The dashboard displays the reports.
+
+- This is the implemented MVP flow used in local demos and interview walkthroughs.
+- Dashboard sections currently include overview, page views by path, interactions summary, and scroll depth summary.
+- The architecture is intentionally REST-first and beginner-readable.
 
 ## Tech Stack
 
@@ -99,6 +115,20 @@ Click tracking only records safe explicit identifiers such as `data-analytics-id
 | Health | http://localhost:4000/api/health |
 | Events API | http://localhost:4000/api/events |
 | PostgreSQL | localhost:5432 |
+
+## Local Demo
+
+Use the existing setup commands in this README, then run a short local demo with:
+
+- Dashboard: http://localhost:3000
+- Demo Site: http://localhost:3001
+- Ingest API: http://localhost:4000
+- Health: http://localhost:4000/api/health
+
+Recommended demo walkthrough docs:
+
+- [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — step-by-step local demo runbook.
+- [`docs/portfolio/interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) — structured 5-7 minute interview walkthrough.
 
 ## Local Setup
 
@@ -183,25 +213,47 @@ docs/                 Product, architecture, setup, and phase docs
 scripts/              Local helper scripts
 ```
 
-## Project Status
+## Portfolio And Interview Docs
 
-Current limitations are intentional for this local MVP:
+Use these docs after reading this README:
 
-- no authentication yet;
-- no production deployment yet;
-- no charts yet;
-- no date filters yet;
+- [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — local demo setup and verification checklist.
+- [`docs/portfolio/interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) — timed interview walkthrough narrative.
+- [`docs/portfolio/technical-highlights.md`](docs/portfolio/technical-highlights.md) — architecture-to-skills mapping for recruiter review.
+- [`docs/portfolio/qa-and-objection-handling.md`](docs/portfolio/qa-and-objection-handling.md) — concise answers to common interview questions.
+- [`docs/portfolio/30-second-60-second-120-second-pitch.md`](docs/portfolio/30-second-60-second-120-second-pitch.md) — short spoken pitch versions.
+- [`docs/portfolio/interview-prep-checklist.md`](docs/portfolio/interview-prep-checklist.md) — quick pre-interview readiness checklist.
+- [`docs/portfolio/demo-day-fallback-script.md`](docs/portfolio/demo-day-fallback-script.md) — fallback narrative when live demo is unavailable.
+
+## Current Limitations
+
+Current limitations are intentional for this local-first MVP:
+
+- no auth yet;
 - no rate limiting yet;
+- no deployment implementation yet;
+- no production monitoring/logging strategy yet;
+- no date filters yet;
 - no aggregation tables or materialized views yet;
 - no background jobs;
 - no batching or offline retry;
-- `session_start` and `session_end` are supported by shared types/schemas but are not emitted by the tracker yet.
+- `session_start` and `session_end` are supported by shared types/schemas but are not emitted by the tracker yet;
+- no E2E/screenshot testing yet;
+- not production SaaS.
 
 ## Documentation
 
 Useful documentation:
 
 - [`docs/README.md`](docs/README.md) — documentation index
+- [`docs/phase-8-context.md`](docs/phase-8-context.md) — current Phase 8 handoff for portfolio presentation polish
+- [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — manual local demo checklist for portfolio and interviews
+- [`docs/portfolio/interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) — 5-7 minute interview walkthrough script
+- [`docs/portfolio/technical-highlights.md`](docs/portfolio/technical-highlights.md) — recruiter-friendly technical highlights and interview mapping
+- [`docs/portfolio/qa-and-objection-handling.md`](docs/portfolio/qa-and-objection-handling.md) — interview Q&A and objection-handling guide
+- [`docs/portfolio/30-second-60-second-120-second-pitch.md`](docs/portfolio/30-second-60-second-120-second-pitch.md) — concise project pitch versions for recruiter/interview conversations
+- [`docs/portfolio/interview-prep-checklist.md`](docs/portfolio/interview-prep-checklist.md) — quick pre-interview checklist for demo readiness
+- [`docs/portfolio/demo-day-fallback-script.md`](docs/portfolio/demo-day-fallback-script.md) — fallback script for no-live-demo interview situations
 - [`docs/phase-6-context.md`](docs/phase-6-context.md) — current Phase 6 handoff
 - [`docs/architecture/architecture.en.md`](docs/architecture/architecture.en.md) — current technical architecture
 - [`docs/architecture/data-flow.en.md`](docs/architecture/data-flow.en.md) — event and reporting data flow
