@@ -246,6 +246,7 @@ Current limitations are intentional for this local-first MVP:
 Useful documentation:
 
 - [`docs/README.md`](docs/README.md) — documentation index
+- [`docs/phase-9-context.md`](docs/phase-9-context.md) — latest handoff context and Phase 9 planning options
 - [`docs/phase-8-context.md`](docs/phase-8-context.md) — current Phase 8 handoff for portfolio presentation polish
 - [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — manual local demo checklist for portfolio and interviews
 - [`docs/portfolio/interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) — 5-7 minute interview walkthrough script
