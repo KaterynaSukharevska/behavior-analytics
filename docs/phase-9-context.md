@@ -211,12 +211,25 @@ Light pointer update in [`docs/README.md`](README.md). No code, screenshots, or 
 
 ---
 
+## Phase 9.4B completed (basic smoke-test planning docs)
+
+Phase 9.4B added [`docs/testing/basic-smoke-test-plan.md`](testing/basic-smoke-test-plan.md):
+
+- current Vitest/CI baseline vs manual smoke;
+- P0 manual checks, P1 automation candidates, P2 deferred;
+- privacy-safe testing rules and when to consider Playwright (plan only).
+
+Indexed under Testing Docs in [`docs/README.md`](README.md). No tests, Playwright, or code changes.
+
+---
+
 ## Recommended Phase 9 next step
 
 Pick one small milestone, for example:
 
 - commit real screenshots under `docs/portfolio/screenshots/` after a verified local demo (only when explicitly requested; use [`demo-screenshots-plan.md`](portfolio/demo-screenshots-plan.md));
-- deployment-readiness planning tweaks in docs only from [`deployment/deployment-plan.en.md`](deployment/deployment-plan.en.md).
+- deployment-readiness planning tweaks in docs only from [`deployment/deployment-plan.en.md`](deployment/deployment-plan.en.md);
+- implement a single P1 API integration smoke test only when explicitly requested (not Playwright by default).
 
 Do not add fake images or production claims.
 

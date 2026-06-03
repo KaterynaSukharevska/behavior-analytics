@@ -46,6 +46,7 @@ Behavior Analytics MVP is a local-first portfolio project with:
 - [`architecture/css-conventions.en.md`](architecture/css-conventions.en.md) — plain CSS conventions
 - [`architecture/privacy-security.en.md`](architecture/privacy-security.en.md) — privacy and security rules
 - [`architecture/testing-strategy.en.md`](architecture/testing-strategy.en.md) — current checks and Phase 6 testing priorities
+- [`testing/basic-smoke-test-plan.md`](testing/basic-smoke-test-plan.md) — P0/P1/P2 smoke checks, manual demo gate, future E2E planning (no Playwright yet)
 - [`architecture/project-decisions.en.md`](architecture/project-decisions.en.md) — lightweight decision notes
 
 Russian architecture docs may lag behind English docs.
@@ -81,6 +82,13 @@ Some product docs include future concepts such as users/workspaces/projects. The
 - [`portfolio/30-second-60-second-120-second-pitch.md`](portfolio/30-second-60-second-120-second-pitch.md) — concise 30s, 60s, and 120s project pitch templates
 - [`portfolio/interview-prep-checklist.md`](portfolio/interview-prep-checklist.md) — practical checklist to prepare 30 minutes before interviews
 - [`portfolio/demo-day-fallback-script.md`](portfolio/demo-day-fallback-script.md) — calm fallback script for interviews when local services are unavailable
+
+---
+
+## Testing Docs
+
+- [`testing/basic-smoke-test-plan.md`](testing/basic-smoke-test-plan.md) — manual smoke priorities, demo pre-checks, privacy-safe test rules, when to consider Playwright (plan only)
+- [`architecture/testing-strategy.en.md`](architecture/testing-strategy.en.md) — Vitest/CI baseline and testing priorities
 
 ---
 
