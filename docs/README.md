@@ -14,7 +14,7 @@ Behavior Analytics MVP is a local-first portfolio project with:
 
 ## Start Here
 
-- [`../README.md`](../README.md) — project overview, stack, ports, and roadmap
+- [`../README.md`](../README.md) — **GitHub portfolio entry point** — overview, flow, stack, limitations, links to portfolio docs
 - [`setup/local-development.en.md`](setup/local-development.en.md) — local setup notes
 - [`setup/tracker-local-smoke.en.md`](setup/tracker-local-smoke.en.md) — tracker/demo-site smoke checklist
 - [`setup/dashboard-reporting-smoke.en.md`](setup/dashboard-reporting-smoke.en.md) — dashboard/reporting smoke checklist

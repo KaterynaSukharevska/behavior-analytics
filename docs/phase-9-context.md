@@ -198,6 +198,19 @@ Indexed from [`docs/README.md`](README.md) and root [`README.md`](../README.md).
 
 ---
 
+## Phase 9.4A completed (GitHub / README portfolio polish)
+
+Phase 9.4A polished root [`README.md`](../README.md) as the GitHub landing page:
+
+- clearer opening (portfolio purpose, privacy-conscious analytics, local-first / not production SaaS);
+- aligned implemented-flow diagram and tech stack (including CI);
+- consolidated portfolio/interview doc table; trimmed duplicate documentation links;
+- explicit limitations and privacy does-not-collect list.
+
+Light pointer update in [`docs/README.md`](README.md). No code, screenshots, or dependency changes.
+
+---
+
 ## Recommended Phase 9 next step
 
 Pick one small milestone, for example:

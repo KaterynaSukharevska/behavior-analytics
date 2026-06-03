@@ -2,9 +2,11 @@
 
 [![CI](https://github.com/KaterynaSukharevska/behavior-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/KaterynaSukharevska/behavior-analytics/actions/workflows/ci.yml)
 
-Behavior Analytics MVP is a privacy-conscious website behavior analytics product built as a local-first portfolio/career project.
+**Behavior Analytics MVP** is a privacy-conscious **website behavior analytics** project built as a **local-first portfolio/career MVP** — for demonstrating full-stack TypeScript work to recruiters and interviewers.
 
-It includes a demo site, browser tracker SDK, Fastify ingest API, PostgreSQL raw event storage, reporting API endpoints, and a Next.js dashboard.
+It is **not** a production SaaS: there is no deployment, auth, or production monitoring in the current implementation. Everything in this README describes what runs locally today.
+
+**What you get:** a Next.js demo site, a browser tracker SDK, a Fastify ingest API, PostgreSQL event storage (Prisma), REST reporting endpoints, and a Next.js dashboard. Detailed walkthroughs live in [`docs/portfolio/`](docs/portfolio/) (linked below).
 
 ## What This Project Demonstrates
 
@@ -37,28 +39,24 @@ It is intentionally presented as a local-first portfolio/career project, not as 
 
 ```txt
 demo-site
-  -> @behavior-analytics/tracker
-  -> POST /api/events
-  -> Zod validation
-  -> Prisma
-  -> PostgreSQL analytics_events
-  -> reporting API endpoints
-  -> dashboard API clients
-  -> dashboard UI
+  → tracker SDK
+  → ingest API
+  → Zod validation
+  → Prisma
+  → PostgreSQL analytics_events
+  → reporting API
+  → dashboard UI
 ```
 
 In plain language:
 
-1. The demo site emits safe behavior events.
-2. The tracker collects page views, clicks, scroll milestones, and explicit conversions.
-3. The ingest API validates incoming events.
-4. PostgreSQL stores validated raw events.
-5. Reporting endpoints aggregate stored events.
-6. The dashboard displays the reports.
+1. The demo site emits privacy-safe behavior events through the tracker SDK.
+2. The ingest API receives `POST /api/events` and validates payloads with Zod.
+3. Prisma persists valid events to PostgreSQL (`analytics_events`).
+4. Reporting endpoints aggregate stored events (`GET /api/reports/*?siteId=demo-site`).
+5. The dashboard fetches those endpoints and renders report sections (overview, page views by path, interactions summary, scroll depth summary).
 
-- This is the implemented MVP flow used in local demos and interview walkthroughs.
-- Dashboard sections currently include overview, page views by path, interactions summary, and scroll depth summary.
-- The architecture is intentionally REST-first and beginner-readable.
+REST-first, beginner-readable architecture. See [`docs/architecture/data-flow.en.md`](docs/architecture/data-flow.en.md) for more detail.
 
 ## Tech Stack
 
@@ -66,16 +64,17 @@ In plain language:
 |------|------------|
 | Monorepo | npm workspaces |
 | Language | TypeScript |
-| Dashboard | Next.js, React |
-| Demo site | Next.js, React |
+| Dashboard | Next.js (React) |
+| Demo site | Next.js (React) |
 | Ingest API | Fastify |
 | Database | PostgreSQL via Docker Compose |
 | DB toolkit | Prisma |
 | Runtime validation | Zod |
 | Testing | Vitest |
 | API style | REST-first |
+| CI | GitHub Actions (workspace typechecks + Vitest on PRs and `main`) |
 
-The project does not use GraphQL or microfrontends.
+**Not used:** GraphQL, microfrontends.
 
 ## Current Features
 
@@ -94,16 +93,20 @@ The project does not use GraphQL or microfrontends.
 
 ## Privacy Principles
 
-Privacy-safe tracking is a core constraint. The tracker does not collect:
+Privacy-safe tracking is a core design constraint. The tracker does **not** collect:
 
 - form values;
-- names, emails, phone numbers, or message text;
+- names;
+- emails;
+- phone numbers;
+- message text;
+- cookies;
+- `localStorage` contents;
 - arbitrary DOM text;
-- cookies or `localStorage` contents;
 - DOM snapshots;
 - session replay data.
 
-Click tracking only records safe explicit identifiers such as `data-analytics-id`. Conversions are explicit business events from code.
+Click tracking uses explicit safe identifiers such as `data-analytics-id` (not button or link text). Conversions are explicit business events from code. See [`docs/architecture/privacy-security.en.md`](docs/architecture/privacy-security.en.md).
 
 ## Local URLs
 
@@ -118,19 +121,17 @@ Click tracking only records safe explicit identifiers such as `data-analytics-id
 
 ## Local Demo
 
-Use the existing setup commands in this README, then run a short local demo with:
+After [Local Setup](#local-setup) below, open:
 
-- Dashboard: http://localhost:3000
-- Demo Site: http://localhost:3001
-- Ingest API: http://localhost:4000
-- Health: http://localhost:4000/api/health
+| Service | URL |
+|---------|-----|
+| Dashboard | http://localhost:3000 |
+| Demo site | http://localhost:3001 |
+| Ingest API health | http://localhost:4000/api/health |
 
-Recommended demo walkthrough docs:
+**Before interviews:** follow [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) (health, reports, dashboard cards, troubleshooting, clean restart).
 
-- [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — step-by-step local demo runbook with health checks, report verification, error-state troubleshooting, and a clean-restart checklist (use this before interviews).
-- [`docs/portfolio/demo-screenshots-plan.md`](docs/portfolio/demo-screenshots-plan.md) — screenshot/media plan for README and interviews (capture locally; do not fake metrics).
-- [`docs/portfolio/interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) — structured 5-7 minute interview walkthrough.
-- [`docs/portfolio/interview-storyline.md`](docs/portfolio/interview-storyline.md) — 5-/10-minute storyline and screen-by-screen talking points.
+**Portfolio & interview docs:** see [Portfolio & interview docs](#portfolio--interview-docs) — pitches, storyline, Q&A, screenshots plan, fallback script.
 
 ## Local Setup
 
@@ -215,54 +216,47 @@ docs/                 Product, architecture, setup, and phase docs
 scripts/              Local helper scripts
 ```
 
-## Portfolio And Interview Docs
+## Portfolio & interview docs
 
-Use these docs after reading this README:
+Use these for GitHub visitors, recruiters, and technical interviews (details stay in `docs/`, not duplicated here):
 
-- [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — local demo setup and verification checklist.
-- [`docs/portfolio/demo-screenshots-plan.md`](docs/portfolio/demo-screenshots-plan.md) — planned screenshot sequence and privacy-safe capture rules.
-- [`docs/portfolio/interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) — timed interview walkthrough narrative.
-- [`docs/portfolio/interview-storyline.md`](docs/portfolio/interview-storyline.md) — interview storytelling aligned with the live demo flow.
-- [`docs/portfolio/technical-highlights.md`](docs/portfolio/technical-highlights.md) — architecture-to-skills mapping for recruiter review.
-- [`docs/portfolio/qa-and-objection-handling.md`](docs/portfolio/qa-and-objection-handling.md) — concise answers to common interview questions.
-- [`docs/portfolio/30-second-60-second-120-second-pitch.md`](docs/portfolio/30-second-60-second-120-second-pitch.md) — short spoken pitch versions.
-- [`docs/portfolio/interview-prep-checklist.md`](docs/portfolio/interview-prep-checklist.md) — quick pre-interview readiness checklist.
-- [`docs/portfolio/demo-day-fallback-script.md`](docs/portfolio/demo-day-fallback-script.md) — fallback narrative when live demo is unavailable.
+| Document | Use for |
+|----------|---------|
+| [`local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) | Run and verify the local demo before presenting |
+| [`demo-screenshots-plan.md`](docs/portfolio/demo-screenshots-plan.md) | Screenshot sequence and capture rules (plan only; no images in repo yet) |
+| [`interview-storyline.md`](docs/portfolio/interview-storyline.md) | 5-/10-minute talk track and per-screen narrative |
+| [`interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) | Timed 5–7 minute walkthrough |
+| [`technical-highlights.md`](docs/portfolio/technical-highlights.md) | Architecture → skills mapping |
+| [`qa-and-objection-handling.md`](docs/portfolio/qa-and-objection-handling.md) | Common questions and honest objections |
+| [`30-second-60-second-120-second-pitch.md`](docs/portfolio/30-second-60-second-120-second-pitch.md) | Short spoken pitches |
+| [`interview-prep-checklist.md`](docs/portfolio/interview-prep-checklist.md) | 30 minutes before an interview |
+| [`demo-day-fallback-script.md`](docs/portfolio/demo-day-fallback-script.md) | When live demo is unavailable |
+
+Full docs index: [`docs/README.md`](docs/README.md).
 
 ## Current Limitations
 
-Current limitations are intentional for this local-first MVP:
+Intentional scope boundaries for this local-first MVP (do not present as production-ready):
 
-- no auth yet;
-- no rate limiting yet;
-- no deployment implementation yet;
-- no production monitoring/logging strategy yet;
-- no date filters yet;
-- no aggregation tables or materialized views yet;
-- no background jobs;
-- no batching or offline retry;
-- `session_start` and `session_end` are supported by shared types/schemas but are not emitted by the tracker yet;
-- no E2E/screenshot testing yet;
-- not production SaaS.
+- no auth
+- no rate limiting
+- no deployment yet (plan only: [`docs/deployment/deployment-plan.en.md`](docs/deployment/deployment-plan.en.md))
+- no production monitoring/logging strategy
+- no date filters
+- no aggregation tables or materialized views
+- no background jobs
+- no batching or offline retry
+- no `session_start` / `session_end` emission from the tracker (types/schemas exist; tracker does not emit yet)
+- no E2E or screenshot testing automation
+- **not production SaaS**
 
 ## Documentation
 
-Useful documentation:
-
-- [`docs/README.md`](docs/README.md) — documentation index
-- [`docs/phase-9-context.md`](docs/phase-9-context.md) — latest handoff context and Phase 9 planning options
-- [`docs/phase-8-context.md`](docs/phase-8-context.md) — current Phase 8 handoff for portfolio presentation polish
-- [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — manual local demo checklist for portfolio and interviews
-- [`docs/portfolio/interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) — 5-7 minute interview walkthrough script
-- [`docs/portfolio/technical-highlights.md`](docs/portfolio/technical-highlights.md) — recruiter-friendly technical highlights and interview mapping
-- [`docs/portfolio/qa-and-objection-handling.md`](docs/portfolio/qa-and-objection-handling.md) — interview Q&A and objection-handling guide
-- [`docs/portfolio/30-second-60-second-120-second-pitch.md`](docs/portfolio/30-second-60-second-120-second-pitch.md) — concise project pitch versions for recruiter/interview conversations
-- [`docs/portfolio/interview-prep-checklist.md`](docs/portfolio/interview-prep-checklist.md) — quick pre-interview checklist for demo readiness
-- [`docs/portfolio/demo-day-fallback-script.md`](docs/portfolio/demo-day-fallback-script.md) — fallback script for no-live-demo interview situations
-- [`docs/phase-6-context.md`](docs/phase-6-context.md) — current Phase 6 handoff
-- [`docs/architecture/architecture.en.md`](docs/architecture/architecture.en.md) — current technical architecture
+- [`docs/README.md`](docs/README.md) — full documentation index (architecture, setup, product, phase handoffs)
+- [`docs/architecture/architecture.en.md`](docs/architecture/architecture.en.md) — technical architecture
 - [`docs/architecture/data-flow.en.md`](docs/architecture/data-flow.en.md) — event and reporting data flow
 - [`docs/architecture/privacy-security.en.md`](docs/architecture/privacy-security.en.md) — privacy and security rules
 - [`docs/setup/local-development.en.md`](docs/setup/local-development.en.md) — local setup notes
 - [`docs/setup/tracker-local-smoke.en.md`](docs/setup/tracker-local-smoke.en.md) — tracker smoke checklist
 - [`docs/setup/dashboard-reporting-smoke.en.md`](docs/setup/dashboard-reporting-smoke.en.md) — dashboard/reporting smoke checklist
+- [`docs/phase-9-context.md`](docs/phase-9-context.md) — latest phase handoff and planning context
