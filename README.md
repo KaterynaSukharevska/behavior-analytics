@@ -259,4 +259,5 @@ Intentional scope boundaries for this local-first MVP (do not present as product
 - [`docs/setup/local-development.en.md`](docs/setup/local-development.en.md) — local setup notes
 - [`docs/setup/tracker-local-smoke.en.md`](docs/setup/tracker-local-smoke.en.md) — tracker smoke checklist
 - [`docs/setup/dashboard-reporting-smoke.en.md`](docs/setup/dashboard-reporting-smoke.en.md) — dashboard/reporting smoke checklist
-- [`docs/phase-9-context.md`](docs/phase-9-context.md) — latest phase handoff and planning context
+- [`docs/phase-10-context.md`](docs/phase-10-context.md) — current phase handoff (demo evidence and screenshot assets)
+- [`docs/phase-9-context.md`](docs/phase-9-context.md) — Phase 9 handoff and completion summary

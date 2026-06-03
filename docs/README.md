@@ -30,7 +30,8 @@ Behavior Analytics MVP is a local-first portfolio project with:
 - [`ai/cursor-working-rules.md`](ai/cursor-working-rules.md) — short working rules for Cursor agents
 - [`deployment/deployment-plan.en.md`](deployment/deployment-plan.en.md) — future deployment planning notes
 - [`phase-8-context.md`](phase-8-context.md) — current Phase 8 handoff for portfolio presentation polish
-- [`phase-9-context.md`](phase-9-context.md) — Phase 9 handoff and next-step planning context
+- [`phase-9-context.md`](phase-9-context.md) — Phase 9 handoff (portfolio polish and smoke planning)
+- [`phase-10-context.md`](phase-10-context.md) — **current** Phase 10 handoff — demo evidence and screenshot assets
 - [`phase-7-context.md`](phase-7-context.md) — current Phase 7 handoff for CI and portfolio polish
 - [`phase-6-context.md`](phase-6-context.md) — current Phase 6 handoff for polish, tests, and portfolio readiness
 - [`phase-5-context.md`](phase-5-context.md) — dashboard reporting foundation handoff
@@ -122,6 +123,7 @@ Some product docs include future concepts such as users/workspaces/projects. The
 - [`phase-6-context.md`](phase-6-context.md) — polish, tests, and portfolio readiness
 - [`phase-7-context.md`](phase-7-context.md) — CI, README polish, and simple dashboard charts
 - [`phase-8-context.md`](phase-8-context.md) — portfolio presentation polish context and planning
-- [`phase-9-context.md`](phase-9-context.md) — post-Phase 8 handoff and Phase 9 candidate directions
+- [`phase-9-context.md`](phase-9-context.md) — post-Phase 8 handoff and Phase 9 completion summary
+- [`phase-10-context.md`](phase-10-context.md) — Phase 10 handoff — demo evidence and screenshot assets (planning; images not required yet)
 
 Phase handoffs are useful implementation history. For stable current conventions, prefer the architecture docs above.
