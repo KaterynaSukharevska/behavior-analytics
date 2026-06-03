@@ -127,8 +127,10 @@ Use the existing setup commands in this README, then run a short local demo with
 
 Recommended demo walkthrough docs:
 
-- [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — step-by-step local demo runbook.
+- [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — step-by-step local demo runbook with health checks, report verification, error-state troubleshooting, and a clean-restart checklist (use this before interviews).
+- [`docs/portfolio/demo-screenshots-plan.md`](docs/portfolio/demo-screenshots-plan.md) — screenshot/media plan for README and interviews (capture locally; do not fake metrics).
 - [`docs/portfolio/interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) — structured 5-7 minute interview walkthrough.
+- [`docs/portfolio/interview-storyline.md`](docs/portfolio/interview-storyline.md) — 5-/10-minute storyline and screen-by-screen talking points.
 
 ## Local Setup
 
@@ -218,7 +220,9 @@ scripts/              Local helper scripts
 Use these docs after reading this README:
 
 - [`docs/portfolio/local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) — local demo setup and verification checklist.
+- [`docs/portfolio/demo-screenshots-plan.md`](docs/portfolio/demo-screenshots-plan.md) — planned screenshot sequence and privacy-safe capture rules.
 - [`docs/portfolio/interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) — timed interview walkthrough narrative.
+- [`docs/portfolio/interview-storyline.md`](docs/portfolio/interview-storyline.md) — interview storytelling aligned with the live demo flow.
 - [`docs/portfolio/technical-highlights.md`](docs/portfolio/technical-highlights.md) — architecture-to-skills mapping for recruiter review.
 - [`docs/portfolio/qa-and-objection-handling.md`](docs/portfolio/qa-and-objection-handling.md) — concise answers to common interview questions.
 - [`docs/portfolio/30-second-60-second-120-second-pitch.md`](docs/portfolio/30-second-60-second-120-second-pitch.md) — short spoken pitch versions.

@@ -18,8 +18,10 @@ Behavior Analytics MVP is a local-first portfolio project with:
 - [`setup/local-development.en.md`](setup/local-development.en.md) — local setup notes
 - [`setup/tracker-local-smoke.en.md`](setup/tracker-local-smoke.en.md) — tracker/demo-site smoke checklist
 - [`setup/dashboard-reporting-smoke.en.md`](setup/dashboard-reporting-smoke.en.md) — dashboard/reporting smoke checklist
-- [`portfolio/local-demo-checklist.md`](portfolio/local-demo-checklist.md) — manual local demo checklist for portfolio and interviews
+- [`portfolio/local-demo-checklist.md`](portfolio/local-demo-checklist.md) — **start here for live demos** — run, verify, and troubleshoot the local flow (health, reports, dashboard cards, clean restart)
+- [`portfolio/demo-screenshots-plan.md`](portfolio/demo-screenshots-plan.md) — screenshot sequence, privacy rules, and file naming (plan only; no images in repo yet)
 - [`portfolio/interview-walkthrough-script.md`](portfolio/interview-walkthrough-script.md) — 5-7 minute interview walkthrough narrative
+- [`portfolio/interview-storyline.md`](portfolio/interview-storyline.md) — 5- and 10-minute storyline, screen-by-screen talk track, architecture and follow-up Q&A
 - [`portfolio/technical-highlights.md`](portfolio/technical-highlights.md) — recruiter-friendly map of architecture to skills and interview points
 - [`portfolio/qa-and-objection-handling.md`](portfolio/qa-and-objection-handling.md) — concise interview Q&A and objection-handling answers
 - [`portfolio/30-second-60-second-120-second-pitch.md`](portfolio/30-second-60-second-120-second-pitch.md) — short spoken pitch versions for interviews and recruiters
@@ -70,8 +72,10 @@ Some product docs include future concepts such as users/workspaces/projects. The
 
 ## Portfolio Docs
 
-- [`portfolio/local-demo-checklist.md`](portfolio/local-demo-checklist.md) — manual local demo checklist for portfolio, interviews, and screenshots
+- [`portfolio/local-demo-checklist.md`](portfolio/local-demo-checklist.md) — manual local demo checklist for portfolio, interviews, and screenshots (health, reports, troubleshooting, clean restart)
+- [`portfolio/demo-screenshots-plan.md`](portfolio/demo-screenshots-plan.md) — which screenshots to capture, what they prove, and privacy-safe capture rules (no image files yet)
 - [`portfolio/interview-walkthrough-script.md`](portfolio/interview-walkthrough-script.md) — 5-7 minute interview walkthrough script and talking points
+- [`portfolio/interview-storyline.md`](portfolio/interview-storyline.md) — interview storytelling: demo order, what to say per screen, limitations, follow-ups
 - [`portfolio/technical-highlights.md`](portfolio/technical-highlights.md) — concise technical highlights for recruiter/interview review
 - [`portfolio/qa-and-objection-handling.md`](portfolio/qa-and-objection-handling.md) — practical answers to common interview/recruiter objections
 - [`portfolio/30-second-60-second-120-second-pitch.md`](portfolio/30-second-60-second-120-second-pitch.md) — concise 30s, 60s, and 120s project pitch templates

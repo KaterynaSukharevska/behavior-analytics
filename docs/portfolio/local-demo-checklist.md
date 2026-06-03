@@ -1,6 +1,6 @@
 # Local demo checklist
 
-Use this checklist to manually run and present the Behavior Analytics MVP on your machine. It is for portfolio preparation, recruiter/interviewer walkthroughs, screenshot capture, and short demo video recording.
+Use this checklist to run and verify the Behavior Analytics MVP on your machine before interviews, portfolio reviews, or demo recordings.
 
 This project is a **local-first portfolio MVP**, not a production SaaS. No deployment is required for this demo.
 
@@ -11,112 +11,124 @@ This project is a **local-first portfolio MVP**, not a production SaaS. No deplo
 Demonstrate the current implemented product flow:
 
 ```txt
-demo-site → tracker SDK → ingest API → database → reporting API → dashboard
+demo-site → tracker SDK → ingest API → Zod validation → Prisma → PostgreSQL analytics_events → reporting API → dashboard UI
 ```
-
-In plain language:
-
-1. The demo site emits privacy-safe behavior events.
-2. The tracker sends events to the ingest API.
-3. Zod validates events before persistence.
-4. Prisma stores events in PostgreSQL (`analytics_events`).
-5. Reporting endpoints aggregate stored events.
-6. The dashboard displays overview and report sections.
 
 ---
 
-## Before you start
+## Before the demo
 
-Confirm these prerequisites at a high level:
+Complete this once before an interview or recording session.
+
+### Prerequisites
 
 - [ ] Node.js 20+ and npm are installed
 - [ ] Docker Desktop is available for PostgreSQL
-- [ ] Repository dependencies are installed (`npm install` from repo root)
-- [ ] Root `.env` exists (copy from `.env.example` if needed, especially `DATABASE_URL`)
+- [ ] Repository dependencies are installed: `npm install` (from repo root)
+- [ ] Root `.env` exists (copy from `.env.example` if needed; `DATABASE_URL` is required)
 - [ ] Prisma client and migrations are ready (see [`README.md`](../../README.md) Local Setup)
-- [ ] You understand this is a **local demo only** — no production deployment required
 
-For full setup commands, use [`README.md`](../../README.md) and [`docs/setup/local-development.en.md`](../setup/local-development.en.md).
+### Quick port check
+
+Confirm these ports are free before starting services:
+
+| Port | Service |
+|------|---------|
+| 3000 | Dashboard |
+| 3001 | Demo site |
+| 4000 | Ingest API |
+| 5432 | PostgreSQL |
+
+If a port is busy, stop the old process or change the port in `.env` only when you understand the impact.
+
+### Tabs to prepare (optional)
+
+- [ ] http://localhost:3000 — dashboard
+- [ ] http://localhost:3001 — demo site
+- [ ] http://localhost:4000/api/health — ingest health
+- [ ] This checklist open for reference
+
+Full setup commands: [`README.md`](../../README.md), [`docs/setup/local-development.en.md`](../setup/local-development.en.md).
 
 ---
 
 ## Start local services
 
-Run these from the **repository root** in separate terminals. Commands match the root README.
+Run from the **repository root** in separate terminals. **Recommended order:** PostgreSQL → ingest API → dashboard → demo site.
 
-### PostgreSQL (Docker Compose)
-
-- [ ] Start PostgreSQL:
+### 1. PostgreSQL (Docker Compose)
 
 ```bash
 docker compose up -d postgres
 docker compose ps
 ```
 
-- [ ] Prepare Prisma if needed:
+Prepare Prisma if needed:
 
 ```bash
 npm run db:generate
 npm run db:migrate
 ```
 
-### Ingest API (`localhost:4000`)
+- [ ] `docker compose ps` shows postgres running
+- [ ] `npm run db:status` succeeds (if unsure about schema state)
 
-- [ ] Start ingest API:
+### 2. Ingest API — http://localhost:4000
 
 ```bash
 npm run dev --workspace=@behavior-analytics/ingest-api
 ```
 
-### Dashboard (`localhost:3000`)
+- [ ] Terminal shows ingest API listening (no immediate crash)
 
-- [ ] Start dashboard:
+### 3. Dashboard — http://localhost:3000
 
 ```bash
 npm run dev --workspace=@behavior-analytics/dashboard
 ```
 
-### Demo site (`localhost:3001`)
+- [ ] Dashboard page loads in the browser
 
-- [ ] Start demo site:
+### 4. Demo site — http://localhost:3001
 
 ```bash
 npm run dev --workspace=@behavior-analytics/demo-site
 ```
 
----
+- [ ] Demo site home page loads
 
-## Health checks
-
-Manual checks before generating demo data:
-
-- [ ] Ingest API health: open http://localhost:4000/api/health  
-  Expected JSON: `{ "ok": true, "service": "ingest-api" }`
-- [ ] Dashboard opens: http://localhost:3000
-- [ ] Demo site opens: http://localhost:3001
-
-Optional direct report endpoint checks (browser or `curl`):
-
-- [ ] http://localhost:4000/api/reports/overview?siteId=demo-site
-- [ ] http://localhost:4000/api/reports/page-views-by-path?siteId=demo-site
-- [ ] http://localhost:4000/api/reports/interactions-summary?siteId=demo-site
-- [ ] http://localhost:4000/api/reports/scroll-depth-summary?siteId=demo-site
-
-All reporting endpoints use `siteId=demo-site`.
-
-More API smoke detail: [`docs/setup/dashboard-reporting-smoke.en.md`](../setup/dashboard-reporting-smoke.en.md).
+Do not skip ingest API or PostgreSQL — the dashboard reads reports from the API, not the database directly.
 
 ---
 
-## Generate demo events
+## Verify ingest API health
 
-Use the demo site at http://localhost:3001. Events are sent to `POST http://localhost:4000/api/events`.
+Check before generating demo data.
 
-Optional: open browser DevTools → **Network** and filter by `events` or `4000` to confirm requests return `{ "ok": true, "accepted": 1 }`.
+- [ ] Open http://localhost:4000/api/health
+- [ ] Response is JSON: `{ "ok": true, "service": "ingest-api" }`
+
+If health fails:
+
+- [ ] Ingest API terminal is still running
+- [ ] Port 4000 is not used by another app
+- [ ] Restart ingest API after PostgreSQL is up
+
+Optional events endpoint (after demo data exists):
+
+- [ ] `POST http://localhost:4000/api/events` is used by the tracker from the demo site (check Network tab on demo site, not manual POST unless testing)
+
+---
+
+## Generate demo data from the demo-site
+
+Use http://localhost:3001. The tracker sends events to `POST http://localhost:4000/api/events`.
+
+**Optional:** DevTools → **Network** → filter `events` or `4000`. Successful ingest responses look like `{ "ok": true, "accepted": 1 }`.
 
 ### `page_view`
 
-- [ ] Visit multiple routes (each navigation sends a page view):
+- [ ] Visit routes (each navigation sends a page view):
   - `/`
   - `/features`
   - `/pricing`
@@ -125,21 +137,15 @@ Optional: open browser DevTools → **Network** and filter by `events` or `4000`
 
 ### `click`
 
-- [ ] Click elements that have `data-analytics-id` (for example navigation links or hero/pricing CTAs)
-- [ ] Confirm clicks on form fields or elements **without** `data-analytics-id` are not tracked
+- [ ] Click elements with `data-analytics-id` (nav links, hero/pricing CTAs)
+- [ ] Confirm clicks on form fields or elements **without** `data-analytics-id` are **not** tracked
 
 ### `scroll_depth`
 
-- [ ] On a long page (home works well), scroll slowly through milestones:
-  - 25%
-  - 50%
-  - 75%
-  - 100%
-- [ ] Each milestone should fire at most once per path per session
+- [ ] On a long page (home works well), scroll through milestones: 25%, 50%, 75%, 100%
+- [ ] Each milestone fires at most once per path per session
 
 ### `conversion`
-
-Trigger the demo site's explicit conversion events:
 
 | Action | Conversion name |
 |--------|-----------------|
@@ -147,27 +153,51 @@ Trigger the demo site's explicit conversion events:
 | Pricing page → **Contact sales** | `pricing_cta_clicked` |
 | Open `/thank-you` | `thank_you_page_viewed` |
 
-More tracker detail: [`docs/setup/tracker-local-smoke.en.md`](../setup/tracker-local-smoke.en.md).
+More detail: [`docs/setup/tracker-local-smoke.en.md`](../setup/tracker-local-smoke.en.md).
 
 ---
 
-## Verify dashboard reports
+## Verify report endpoints directly
 
-Open http://localhost:3000 and refresh after generating events.
+Open in the browser or use `curl`. All use `siteId=demo-site`.
 
-Check each current dashboard section:
+| Endpoint | URL |
+|----------|-----|
+| Overview | http://localhost:4000/api/reports/overview?siteId=demo-site |
+| Page views by path | http://localhost:4000/api/reports/page-views-by-path?siteId=demo-site |
+| Interactions summary | http://localhost:4000/api/reports/interactions-summary?siteId=demo-site |
+| Scroll depth summary | http://localhost:4000/api/reports/scroll-depth-summary?siteId=demo-site |
+
+For each endpoint:
+
+- [ ] HTTP 200
+- [ ] JSON body includes `"ok": true` and report data (or empty arrays/zero totals before demo data)
+- [ ] After demo data: totals and lists match what you generated
+
+If any endpoint returns `"ok": false`:
+
+- [ ] PostgreSQL is running
+- [ ] `DATABASE_URL` in `.env` is correct
+- [ ] Run `npm run db:migrate` if schema may be out of date
+
+More API smoke detail: [`docs/setup/dashboard-reporting-smoke.en.md`](../setup/dashboard-reporting-smoke.en.md).
+
+---
+
+## Verify dashboard cards
+
+Open http://localhost:3000 and **hard refresh** after generating demo-site events.
 
 ### Overview
 
-- [ ] Section loads (brief loading state is OK)
-- [ ] Overview metric cards show numbers for page views, clicks, scroll depth events, and conversions
-- [ ] If totals are zero, follow the on-page info message and generate more demo-site events
+- [ ] Brief loading state, then success (not stuck loading)
+- [ ] Metric cards show page views, clicks, scroll depth events, and conversions
+- [ ] If all zeros: generate more events on the demo site, then refresh
 
 ### Page views by path
 
-- [ ] Section shows a CSS-only horizontal bar chart (no chart library)
-- [ ] Table lists paths and page view counts
-- [ ] Data matches visited demo-site routes
+- [ ] CSS-only horizontal bar chart visible (no chart library)
+- [ ] Table lists paths and counts matching visited routes
 
 ### Interactions summary
 
@@ -176,56 +206,89 @@ Check each current dashboard section:
 
 ### Scroll depth summary
 
-- [ ] Section shows a CSS-only milestone visualization (no chart library)
-- [ ] Table lists depth milestones (25%, 50%, 75%, 100%) and event counts
-- [ ] Rows appear after scroll events on a long demo-site page
+- [ ] CSS-only milestone visualization visible
+- [ ] Table shows depth milestones (25%, 50%, 75%, 100%) with counts after scroll events
 
-If any section shows an error alert, see **Troubleshooting** below before continuing.
-
----
-
-## Screenshot capture checklist
-
-Capture screenshots **manually** in your browser or OS screenshot tool. This project does not include screenshot automation (no Playwright/Cypress or similar).
-
-Recommended captures:
-
-- [ ] Dashboard full page (hero + status card + report sections)
-- [ ] Overview metric cards (success state with numbers)
-- [ ] Page views by path chart and table
-- [ ] Interactions summary (clicks and conversions)
-- [ ] Scroll depth visualization and table
-- [ ] Demo-site page showing trackable interactions (for example nav or CTA with `data-analytics-id`)
-- [ ] Optional: browser tab showing http://localhost:4000/api/health JSON
-- [ ] Optional: terminal showing local services running
-
-Store images in your own portfolio folder or `docs/` only when you are ready to commit them in a later Phase 8 task.
+If any section fails, see **Common error states** below.
 
 ---
 
-## Interview talking points
+## Common error states and what to check
 
-Short points you can explain while demoing:
+The dashboard report sections use loading, empty, error, and success states. Use this table during a demo.
 
-- **Privacy-conscious analytics** — no form values, PII, cookies, `localStorage`, arbitrary DOM text, DOM snapshots, or session replay; clicks are opt-in via `data-analytics-id`; conversions are explicit from code.
-- **TypeScript monorepo** — npm workspaces with shared types, validation package, tracker SDK, apps, and Prisma schema.
-- **Zod validation** — events are validated at ingest before persistence.
-- **Fastify API** — REST-first ingest and reporting endpoints with safe public errors.
-- **Prisma/PostgreSQL** — raw events stored in `analytics_events` with query-time reporting helpers.
-- **REST reporting endpoints** — four `GET /api/reports/*` routes power the dashboard.
-- **Dashboard visualization** — simple CSS-only charts for page views and scroll depth; no chart library added.
-- **CI and tests** — GitHub Actions runs typechecks and Vitest for analytics-core, tracker, and ingest-api.
-- **Current limitations** — local-first MVP; not production SaaS; no auth, rate limiting, deployment, or date filters yet.
+| What you see | Likely cause | What to check |
+|--------------|--------------|---------------|
+| Loading never finishes | Ingest API down or wrong URL | Health at http://localhost:4000/api/health; ingest API terminal running |
+| Error alert on a report card | API unreachable or report returned `ok: false` | Direct report URL in browser; PostgreSQL + migrations |
+| Empty / zero metrics | No events stored yet | Demo site open; Network tab shows successful `POST /api/events`; refresh dashboard |
+| Demo site works, dashboard empty | Dashboard cannot reach ingest API | `NEXT_PUBLIC_INGEST_API_URL` unset or wrong (defaults to localhost:4000 locally) |
+| Health OK, reports `ok: false` | Database connection or schema | `docker compose ps`; `npm run db:migrate`; `npm run db:validate` |
+| Clicks missing in interactions | No tracked clicks | Click elements with `data-analytics-id` only |
+| Scroll depth empty | No scroll milestones fired | Scroll home page slowly through 25–100% |
+
+**Interview tip:** If one card errors, show a working report endpoint URL in the browser to prove the API layer, then fix the failing layer (DB, ingest, or demo data).
+
+---
+
+## Clean restart checklist
+
+Use when the demo behaved oddly, ports were stuck, or you want a fresh run.
+
+1. [ ] Stop demo site, dashboard, and ingest API dev terminals (`Ctrl+C`)
+2. [ ] Optional: `docker compose restart postgres` (or `docker compose down` then `docker compose up -d postgres`)
+3. [ ] Confirm ports 3000, 3001, 4000 are free
+4. [ ] From repo root: `docker compose ps` — postgres up
+5. [ ] `npm run db:generate` (only if Prisma client issues appeared)
+6. [ ] Start ingest API → wait until health responds
+7. [ ] Start dashboard → start demo site
+8. [ ] Re-run **Verify ingest API health** and **Generate demo data** sections
+9. [ ] Hard refresh dashboard
+
+Avoid editing code during an interview; prefer restart over live debugging.
+
+---
+
+## What this demo proves technically
+
+When the checklist passes, you can honestly say you verified:
+
+- **End-to-end flow** — demo-site → tracker → ingest → validation → PostgreSQL → reporting API → dashboard
+- **Privacy-conscious tracking** — no form values, PII, cookies, `localStorage`, DOM text, or session replay; clicks via `data-analytics-id`; explicit conversions only
+- **Runtime validation** — Zod at ingest before persistence
+- **REST reporting** — four `GET /api/reports/*` endpoints with `siteId=demo-site`
+- **Dashboard UX** — loading, empty, error, and success states on report sections
+- **Local-first scope** — not production SaaS; no auth, deployment, or date filters in this MVP
+
+Short talking points: [`docs/portfolio/interview-walkthrough-script.md`](interview-walkthrough-script.md), [`docs/portfolio/technical-highlights.md`](technical-highlights.md).
+
+---
+
+## Screenshot capture (optional)
+
+Capture **manually** in the browser or OS tool. No screenshot automation in this repo.
+
+Follow the full sequence, file names, and privacy rules in [`demo-screenshots-plan.md`](demo-screenshots-plan.md).
+
+Quick minimum:
+
+- [ ] Dashboard full page with report sections populated
+- [ ] Overview metric cards with non-zero numbers
+- [ ] Page views chart + table; scroll depth visualization
+- [ ] Demo-site page with visible `data-analytics-id` CTA
+- [ ] Optional: health JSON tab; terminals showing services running
+
+Store images only when you plan to commit them in a later task. Do not fake data or screenshots.
 
 ---
 
 ## Current limitations
 
-Be explicit when presenting the project:
+Be explicit when presenting:
 
 - no authentication
 - no rate limiting
-- no deployment yet (plan only in `docs/deployment/deployment-plan.en.md`)
+- no deployment yet (plan: [`docs/deployment/deployment-plan.en.md`](../deployment/deployment-plan.en.md))
 - no production monitoring/logging strategy
 - no date filters
 - no aggregation tables or materialized views
@@ -233,43 +296,15 @@ Be explicit when presenting the project:
 - no E2E or screenshot testing automation
 - not a production SaaS
 
-The dashboard uses **simple CSS-only charts** for some reports. It does not use a chart library.
-
----
-
-## Troubleshooting
-
-If something fails during the demo, check these in order:
-
-### Docker / PostgreSQL
-
-- [ ] Docker Desktop is running
-- [ ] `docker compose ps` shows the postgres service up
-- [ ] `npm run db:status` and `npm run db:validate` succeed if schema issues are suspected
-
-### Ingest API
-
-- [ ] Ingest API terminal is running
-- [ ] http://localhost:4000/api/health returns `{ "ok": true, "service": "ingest-api" }`
-- [ ] Restart ingest API if health fails
-
-### Report endpoints
-
-- [ ] Direct check: http://localhost:4000/api/reports/overview?siteId=demo-site returns HTTP 200
-- [ ] If response is `{ "ok": false, ... }`, verify database connection and migrations (`npm run db:migrate`)
-
-### Demo site and dashboard data
-
-- [ ] Demo site is open at http://localhost:3001 and you generated `page_view`, `click`, `scroll_depth`, and `conversion` events
-- [ ] Hard refresh dashboard at http://localhost:3000 after generating events
-- [ ] If dashboard sections show error alerts, confirm ingest API is running (dashboard does not connect directly to PostgreSQL)
+Dashboard charts are **CSS-only** (no chart library).
 
 ---
 
 ## Related documentation
 
-- [`README.md`](../../README.md) — project overview and local setup commands
-- [`docs/phase-8-context.md`](../phase-8-context.md) — Phase 8 portfolio polish context
-- [`docs/setup/dashboard-reporting-smoke.en.md`](../setup/dashboard-reporting-smoke.en.md) — detailed reporting API and dashboard smoke steps
-- [`docs/setup/tracker-local-smoke.en.md`](../setup/tracker-local-smoke.en.md) — tracker and event generation detail
-- [`docs/deployment/deployment-plan.en.md`](../deployment/deployment-plan.en.md) — future deployment plan (not implemented)
+- [`README.md`](../../README.md) — project overview and local setup
+- [`docs/phase-9-context.md`](../phase-9-context.md) — Phase 9 handoff
+- [`docs/portfolio/interview-prep-checklist.md`](interview-prep-checklist.md) — 30-minute pre-interview prep
+- [`docs/portfolio/demo-day-fallback-script.md`](demo-day-fallback-script.md) — when live demo is unavailable
+- [`docs/setup/dashboard-reporting-smoke.en.md`](../setup/dashboard-reporting-smoke.en.md) — reporting API smoke steps
+- [`docs/setup/tracker-local-smoke.en.md`](../setup/tracker-local-smoke.en.md) — tracker event detail

@@ -162,21 +162,50 @@ Click tracking rules that must remain true:
 
 ---
 
-## Recommended Phase 9 first step
+## Phase 9.1 completed (local demo reliability docs)
 
-Recommended default:
+Phase 9.1 updated portfolio demo documentation for interview/demo readiness:
 
-**Phase 9.1 — demo media and screenshot capture plan**
+- expanded [`docs/portfolio/local-demo-checklist.md`](portfolio/local-demo-checklist.md) with before-demo prep, service order, health/report/dashboard verification, common error states, clean restart, and what the demo proves technically;
+- light pointers in root [`README.md`](../README.md) and [`docs/README.md`](README.md).
 
-This should be docs-only or mostly docs-only, and define:
+No app, API, tracker, database, CI, or dependency changes.
 
-- which screenshots to capture;
-- what local state/data should be visible;
-- where screenshots could be stored if later added;
-- what must not be faked;
-- how each screenshot supports README and interview storytelling.
+---
 
-Do not add actual screenshots in this step unless explicitly requested.
+## Phase 9.2 completed (screenshot / media planning docs)
+
+Phase 9.2 added [`docs/portfolio/demo-screenshots-plan.md`](portfolio/demo-screenshots-plan.md):
+
+- recommended capture sequence aligned with the implemented local flow;
+- what each shot shows and proves technically;
+- optional shots, privacy-safe rules, suggested file names, and usage (README, GitHub, interviews, LinkedIn);
+- local capture checklist.
+
+Indexed from [`docs/README.md`](README.md) and root [`README.md`](../README.md). No image files, screenshot tooling, or app/API changes.
+
+---
+
+## Phase 9.3 completed (interview storytelling docs)
+
+Phase 9.3 added [`docs/portfolio/interview-storyline.md`](portfolio/interview-storyline.md):
+
+- 5- and 10-minute explanation outlines;
+- recommended demo order and per-screen talk track;
+- sections on architecture, privacy, validation/persistence, reports, tests/CI, limitations, and follow-up Q&A.
+
+Indexed from [`docs/README.md`](README.md) and root [`README.md`](../README.md). No code, screenshots, or dependency changes.
+
+---
+
+## Recommended Phase 9 next step
+
+Pick one small milestone, for example:
+
+- commit real screenshots under `docs/portfolio/screenshots/` after a verified local demo (only when explicitly requested; use [`demo-screenshots-plan.md`](portfolio/demo-screenshots-plan.md));
+- deployment-readiness planning tweaks in docs only from [`deployment/deployment-plan.en.md`](deployment/deployment-plan.en.md).
+
+Do not add fake images or production claims.
 
 ---
 
@@ -212,4 +241,4 @@ Do not add actual screenshots in this step unless explicitly requested.
 
 ## Suggested next Cursor prompt
 
-Create `docs/portfolio/demo-media-plan.md` as a docs-only Phase 9.1 milestone. It should list recommended screenshots, local demo state, capture order, what not to fake, and how each screenshot supports README/interviews. Do not add screenshot tooling, app code, dependencies, or fake images.
+After a successful local demo, add real screenshot files under `docs/portfolio/screenshots/` and optional README embeds — only when explicitly requested. Use [`docs/portfolio/demo-screenshots-plan.md`](portfolio/demo-screenshots-plan.md). Or add a short docs-only deployment-readiness checklist derived from [`deployment/deployment-plan.en.md`](deployment/deployment-plan.en.md). Do not fake metrics or add Playwright.
