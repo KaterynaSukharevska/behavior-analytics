@@ -168,4 +168,5 @@ Because this is an analytics product, manual smoke testing remains valuable.
 After meaningful tracker, ingest, reporting, or dashboard changes, run the relevant smoke doc:
 
 - tracker changes → `tracker-local-smoke.en.md`;
-- reporting/dashboard changes → `dashboard-reporting-smoke.en.md`.
+- reporting/dashboard changes → `dashboard-reporting-smoke.en.md`;
+- demo/interview readiness or smoke priority planning → `docs/testing/basic-smoke-test-plan.md`.

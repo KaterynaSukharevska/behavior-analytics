@@ -58,6 +58,16 @@ In plain language:
 
 REST-first, beginner-readable architecture. See [`docs/architecture/data-flow.en.md`](docs/architecture/data-flow.en.md) for more detail.
 
+## Demo Screenshots
+
+This local demo shows the implemented flow from demo-site tracking events into the ingest API, PostgreSQL, reporting API, and dashboard UI. The images below are **portfolio evidence from a real `localhost` run** — not production deployment, not customer data, and not edited metrics.
+
+| Dashboard overview | Page views by path | Demo site home |
+|--------------------|--------------------|----------------|
+| ![Behavior Analytics local demo dashboard overview](docs/assets/screenshots/dashboard-overview-local-demo.png) | ![Behavior Analytics local demo page views report](docs/assets/screenshots/dashboard-page-views-local-demo.png) | ![Behavior Analytics local demo site used to generate tracker events](docs/assets/screenshots/demo-site-home-local-demo.png) |
+
+More captures and naming rules: [`docs/assets/screenshots/README.md`](docs/assets/screenshots/README.md). Capture guidance: [`docs/portfolio/demo-screenshots-plan.md`](docs/portfolio/demo-screenshots-plan.md).
+
 ## Tech Stack
 
 | Area | Technology |
@@ -223,7 +233,8 @@ Use these for GitHub visitors, recruiters, and technical interviews (details sta
 | Document | Use for |
 |----------|---------|
 | [`local-demo-checklist.md`](docs/portfolio/local-demo-checklist.md) | Run and verify the local demo before presenting |
-| [`demo-screenshots-plan.md`](docs/portfolio/demo-screenshots-plan.md) | Screenshot sequence and capture rules (plan only; no images in repo yet) |
+| [`demo-screenshots-plan.md`](docs/portfolio/demo-screenshots-plan.md) | Screenshot sequence and capture rules |
+| [`assets/screenshots/README.md`](docs/assets/screenshots/README.md) | Committed local demo screenshots (see [Demo Screenshots](#demo-screenshots)) |
 | [`interview-storyline.md`](docs/portfolio/interview-storyline.md) | 5-/10-minute talk track and per-screen narrative |
 | [`interview-walkthrough-script.md`](docs/portfolio/interview-walkthrough-script.md) | Timed 5–7 minute walkthrough |
 | [`technical-highlights.md`](docs/portfolio/technical-highlights.md) | Architecture → skills mapping |
@@ -231,6 +242,10 @@ Use these for GitHub visitors, recruiters, and technical interviews (details sta
 | [`30-second-60-second-120-second-pitch.md`](docs/portfolio/30-second-60-second-120-second-pitch.md) | Short spoken pitches |
 | [`interview-prep-checklist.md`](docs/portfolio/interview-prep-checklist.md) | 30 minutes before an interview |
 | [`demo-day-fallback-script.md`](docs/portfolio/demo-day-fallback-script.md) | When live demo is unavailable |
+| [`final-portfolio-review-checklist.md`](docs/portfolio/final-portfolio-review-checklist.md) | Final GitHub/portfolio readiness review |
+| [`phase-11-final-review-notes.md`](docs/portfolio/phase-11-final-review-notes.md) | Phase 11.1 portfolio review outcomes |
+| [`phase-11-demo-rehearsal-notes.md`](docs/portfolio/phase-11-demo-rehearsal-notes.md) | Phase 11.2 interview demo rehearsal flow |
+| [`phase-11-closure-summary.md`](docs/portfolio/phase-11-closure-summary.md) | Phase 11 closure — final portfolio readiness decision |
 
 Full docs index: [`docs/README.md`](docs/README.md).
 
@@ -259,5 +274,6 @@ Intentional scope boundaries for this local-first MVP (do not present as product
 - [`docs/setup/local-development.en.md`](docs/setup/local-development.en.md) — local setup notes
 - [`docs/setup/tracker-local-smoke.en.md`](docs/setup/tracker-local-smoke.en.md) — tracker smoke checklist
 - [`docs/setup/dashboard-reporting-smoke.en.md`](docs/setup/dashboard-reporting-smoke.en.md) — dashboard/reporting smoke checklist
-- [`docs/phase-10-context.md`](docs/phase-10-context.md) — current phase handoff (demo evidence and screenshot assets)
+- [`docs/phase-11-context.md`](docs/phase-11-context.md) — current phase handoff (interview demo readiness and final portfolio QA)
+- [`docs/phase-10-context.md`](docs/phase-10-context.md) — Phase 10 handoff (demo evidence and screenshot assets)
 - [`docs/phase-9-context.md`](docs/phase-9-context.md) — Phase 9 handoff and completion summary

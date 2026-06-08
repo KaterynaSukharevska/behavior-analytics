@@ -70,7 +70,7 @@ This is a practical 5-7 minute walkthrough for the implemented local MVP, not a 
 ### 6:30-7:00 — Limitations and next steps
 
 - State current limitations honestly (no auth/rate limiting/deployment/etc.).
-- Explain that the next work is planned in small phases, with docs-first portfolio polish in Phase 8.
+- Explain that Phase 11 portfolio QA (review notes and demo rehearsal docs) is complete; next technical work stays small and explicit — e.g. deployment from the existing plan when requested — and only claim what is fully implemented.
 
 ---
 

@@ -171,7 +171,12 @@ Open in the browser or use `curl`. All use `siteId=demo-site`.
 For each endpoint:
 
 - [ ] HTTP 200
-- [ ] JSON body includes `"ok": true` and report data (or empty arrays/zero totals before demo data)
+- [ ] Success JSON includes `siteId` and the expected report fields (errors return `"ok": false` with an `error` code):
+  - Overview — `totals` (`pageViews`, `clicks`, `scrollDepthEvents`, `conversions`)
+  - Page views by path — `items` (`path`, `pageViews`)
+  - Interactions summary — `clicks`, `conversions`
+  - Scroll depth summary — `items` (`depthPercent`, `events`)
+- [ ] Before demo data: zero totals or empty arrays are OK
 - [ ] After demo data: totals and lists match what you generated
 
 If any endpoint returns `"ok": false`:
