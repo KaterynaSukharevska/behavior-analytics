@@ -38,7 +38,8 @@ Behavior Analytics MVP is a local-first portfolio project with:
 - [`phase-8-context.md`](phase-8-context.md) — current Phase 8 handoff for portfolio presentation polish
 - [`phase-9-context.md`](phase-9-context.md) — Phase 9 handoff (portfolio polish and smoke planning)
 - [`phase-10-context.md`](phase-10-context.md) — Phase 10 handoff — demo evidence and screenshot assets
-- [`phase-11-context.md`](phase-11-context.md) — **current** Phase 11 handoff — interview demo readiness and final portfolio QA
+- [`phase-11-context.md`](phase-11-context.md) — Phase 11 handoff — interview demo readiness and final portfolio QA
+- [`phase-12-context.md`](phase-12-context.md) — **optional** Phase 12 handoff — dashboard visual upgrade / reports UI v2
 - [`phase-7-context.md`](phase-7-context.md) — current Phase 7 handoff for CI and portfolio polish
 - [`phase-6-context.md`](phase-6-context.md) — current Phase 6 handoff for polish, tests, and portfolio readiness
 - [`phase-5-context.md`](phase-5-context.md) — dashboard reporting foundation handoff
@@ -139,5 +140,6 @@ Some product docs include future concepts such as users/workspaces/projects. The
 - [`phase-9-context.md`](phase-9-context.md) — post-Phase 8 handoff and Phase 9 completion summary
 - [`phase-10-context.md`](phase-10-context.md) — Phase 10 handoff — demo evidence and screenshot assets
 - [`phase-11-context.md`](phase-11-context.md) — Phase 11 handoff — interview demo readiness and final portfolio QA
+- [`phase-12-context.md`](phase-12-context.md) — **optional** Phase 12 handoff — dashboard visual upgrade / reports UI v2
 
-Phase handoffs are useful implementation history. For stable current conventions, prefer the architecture docs above.
+Phase handoffs are useful implementation history. For stable current conventions, prefer the architecture docs above. Phase 11 closed the portfolio MVP as show-ready; Phase 12 is optional visual polish only.
