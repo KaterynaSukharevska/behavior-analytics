@@ -18,6 +18,66 @@ function isEmptySummary(report: InteractionsSummaryReport): boolean {
   return report.clicks.length === 0 && report.conversions.length === 0;
 }
 
+type BarChartItem = {
+  key: string;
+  label: string;
+  value: number;
+};
+
+function BarChartSkeleton({ rows = 2 }: { rows?: number }) {
+  return (
+    <div className="bar-chart bar-chart--skeleton" aria-hidden="true">
+      {Array.from({ length: rows }, (_, index) => (
+        <div key={index} className="bar-chart__row">
+          <div className="skeleton-line skeleton-line--chart-label" />
+          <div className="bar-chart__track bar-chart__track--skeleton">
+            <div className="skeleton-line skeleton-line--chart-bar" />
+          </div>
+          <div className="skeleton-line skeleton-line--chart-value" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function InteractionBarChart({
+  items,
+  caption,
+  ariaLabel,
+}: {
+  items: BarChartItem[];
+  caption: string;
+  ariaLabel: string;
+}) {
+  const maxValue = Math.max(0, ...items.map((item) => item.value));
+
+  return (
+    <div className="bar-chart" aria-label={ariaLabel}>
+      <p className="bar-chart__caption">{caption}</p>
+      {items.map((item) => {
+        const barWidth = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
+
+        return (
+          <div
+            key={item.key}
+            className="bar-chart__row"
+            aria-label={`${item.label}: ${item.value}`}
+          >
+            <code className="bar-chart__label">{item.label}</code>
+            <div className="bar-chart__track" aria-hidden="true">
+              <div
+                className="bar-chart__bar bar-chart__bar--muted"
+                style={{ width: `${barWidth}%` }}
+              />
+            </div>
+            <span className="bar-chart__value">{item.value}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function InteractionsTableSkeleton({
   firstColumnLabel,
 }: {
@@ -143,11 +203,17 @@ export function InteractionsSummary() {
           <div className="report-section__split">
             <div className="report-block">
               <h3>Top clicked elements</h3>
-              <InteractionsTableSkeleton firstColumnLabel="Element ID" />
+              <BarChartSkeleton />
+              <div className="report-section__divider">
+                <InteractionsTableSkeleton firstColumnLabel="Element ID" />
+              </div>
             </div>
             <div className="report-block">
               <h3>Conversions</h3>
-              <InteractionsTableSkeleton firstColumnLabel="Conversion name" />
+              <BarChartSkeleton />
+              <div className="report-section__divider">
+                <InteractionsTableSkeleton firstColumnLabel="Conversion name" />
+              </div>
             </div>
           </div>
         </div>
@@ -184,7 +250,20 @@ export function InteractionsSummary() {
                   No click events with an element ID yet.
                 </p>
               ) : (
-                <ClicksTable items={state.report.clicks} />
+                <>
+                  <InteractionBarChart
+                    items={state.report.clicks.map((item) => ({
+                      key: item.elementId,
+                      label: item.elementId,
+                      value: item.clicks,
+                    }))}
+                    caption="Relative click counts"
+                    ariaLabel="Top clicked elements chart"
+                  />
+                  <div className="report-section__divider">
+                    <ClicksTable items={state.report.clicks} />
+                  </div>
+                </>
               )}
             </div>
 
@@ -193,7 +272,20 @@ export function InteractionsSummary() {
               {state.report.conversions.length === 0 ? (
                 <p className="report-block__empty">No conversion events yet.</p>
               ) : (
-                <ConversionsTable items={state.report.conversions} />
+                <>
+                  <InteractionBarChart
+                    items={state.report.conversions.map((item) => ({
+                      key: item.conversionName,
+                      label: item.conversionName,
+                      value: item.conversions,
+                    }))}
+                    caption="Relative conversion counts"
+                    ariaLabel="Conversions chart"
+                  />
+                  <div className="report-section__divider">
+                    <ConversionsTable items={state.report.conversions} />
+                  </div>
+                </>
               )}
             </div>
           </div>

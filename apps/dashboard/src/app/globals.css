@@ -416,6 +416,21 @@ body {
   line-height: 1.35;
 }
 
+.metric-grid__meter {
+  margin-top: 0.5rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: #e8eef8;
+  overflow: hidden;
+}
+
+.metric-grid__meter-bar {
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1e56d9, #4d8df0);
+}
+
 .metric-grid__item--skeleton {
   min-height: 5.5rem;
 }
@@ -505,49 +520,168 @@ body {
 .bar-chart {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.5rem;
   margin-top: 0;
-  padding: 0;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 10px;
+  background: var(--color-surface-muted);
+}
+
+.bar-chart__caption {
+  margin: 0 0 0.25rem;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .bar-chart__row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.bar-chart__label-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: baseline;
-  font-size: 0.9rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr) auto;
+  gap: 0.65rem;
+  align-items: center;
 }
 
 .bar-chart__label {
-  overflow-wrap: anywhere;
+  overflow: hidden;
   font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.8125rem;
   color: var(--color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .bar-chart__value {
+  min-width: 1.75rem;
   color: var(--color-text);
+  font-size: 0.8125rem;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
   white-space: nowrap;
 }
 
 .bar-chart__track {
   overflow: hidden;
-  height: 0.75rem;
+  height: 0.625rem;
   border-radius: 999px;
-  background: #e8eef8;
+  background: #e2eaf6;
 }
 
 .bar-chart__bar {
   height: 100%;
   min-width: 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, #1e56d9, #57a1ff);
+  background: linear-gradient(90deg, #1e56d9, #4d8df0);
+}
+
+.bar-chart__bar--muted {
+  background: linear-gradient(90deg, #3b6fc4, #6b9de8);
+}
+
+.bar-chart--skeleton .bar-chart__row {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) 2.5rem;
+}
+
+.bar-chart__track--skeleton {
+  display: flex;
+  align-items: center;
+  background: #e8edf5;
+}
+
+.skeleton-line--chart-label {
+  width: 85%;
+  height: 0.75rem;
+}
+
+.skeleton-line--chart-bar {
+  width: 55%;
+  height: 0.5rem;
+  margin: 0;
+}
+
+.skeleton-line--chart-value {
+  width: 1.75rem;
+  height: 0.75rem;
+  margin: 0;
+}
+
+.depth-chart {
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 10px;
+  background: var(--color-surface-muted);
+}
+
+.depth-chart__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.depth-chart__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.depth-chart__value {
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.depth-chart__track {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 3.5rem;
+  height: 5.5rem;
+  border-radius: 8px 8px 4px 4px;
+  background: #e2eaf6;
+  overflow: hidden;
+}
+
+.depth-chart__bar {
+  width: 100%;
+  min-height: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, #4d8df0, #1e56d9);
+}
+
+.depth-chart__label {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.depth-chart--skeleton .depth-chart__track {
+  align-items: stretch;
+  background: #e8edf5;
+}
+
+.skeleton-line--depth-bar {
+  width: 100%;
+  height: 45%;
+  margin: auto 0 0;
+  align-self: flex-end;
+}
+
+.report-block .bar-chart,
+.report-block .depth-chart {
+  margin-top: 0;
+}
+
+.report-block .report-section__divider {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
 }
 
 .skeleton-line--path {
@@ -642,6 +776,20 @@ body {
 
   .report-section {
     padding: 1rem;
+  }
+
+  .bar-chart__row {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .bar-chart__value {
+    text-align: left;
+  }
+
+  .depth-chart__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
   }
 
   .status-strip__list {

@@ -16,6 +16,25 @@ function formatDepthLabel(depthPercent: number): string {
   return `${depthPercent}%`;
 }
 
+function DepthChartSkeleton() {
+  return (
+    <div className="depth-chart depth-chart--skeleton" aria-hidden="true">
+      <p className="bar-chart__caption">Milestone event distribution</p>
+      <div className="depth-chart__grid">
+        {[25, 50, 75, 100].map((milestone) => (
+          <div key={milestone} className="depth-chart__item">
+            <div className="skeleton-line skeleton-line--chart-value" />
+            <div className="depth-chart__track">
+              <div className="skeleton-line skeleton-line--depth-bar" />
+            </div>
+            <span className="depth-chart__label">{milestone}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ScrollDepthTableSkeleton() {
   return (
     <table className="path-table path-table--skeleton" aria-hidden="true">
@@ -70,7 +89,7 @@ function ScrollDepthTable({
   );
 }
 
-function ScrollDepthBarChart({
+function ScrollDepthDistributionChart({
   items,
 }: {
   items: ScrollDepthSummaryReport["items"];
@@ -78,33 +97,34 @@ function ScrollDepthBarChart({
   const maxEvents = Math.max(0, ...items.map((item) => item.events));
 
   return (
-    <div className="bar-chart" aria-label="Scroll depth milestone chart">
-      {items.map((item) => {
-        const barWidth = maxEvents > 0 ? (item.events / maxEvents) * 100 : 0;
+    <div className="depth-chart" aria-label="Scroll depth distribution chart">
+      <p className="bar-chart__caption">Milestone event distribution</p>
+      <div className="depth-chart__grid">
+        {items.map((item) => {
+          const barHeight = maxEvents > 0 ? (item.events / maxEvents) * 100 : 0;
 
-        return (
-          <div
-            key={item.depthPercent}
-            className="bar-chart__row"
-            aria-label={`${formatDepthLabel(item.depthPercent)} scroll depth: ${
-              item.events
-            } events`}
-          >
-            <div className="bar-chart__label-row">
-              <span className="bar-chart__label">
+          return (
+            <div
+              key={item.depthPercent}
+              className="depth-chart__item"
+              aria-label={`${formatDepthLabel(item.depthPercent)} scroll depth: ${
+                item.events
+              } events`}
+            >
+              <span className="depth-chart__value">{item.events}</span>
+              <div className="depth-chart__track" aria-hidden="true">
+                <div
+                  className="depth-chart__bar"
+                  style={{ height: `${barHeight}%` }}
+                />
+              </div>
+              <span className="depth-chart__label">
                 {formatDepthLabel(item.depthPercent)}
               </span>
-              <span className="bar-chart__value">{item.events}</span>
             </div>
-            <div className="bar-chart__track" aria-hidden="true">
-              <div
-                className="bar-chart__bar"
-                style={{ width: `${barWidth}%` }}
-              />
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -152,7 +172,10 @@ export function ScrollDepthSummary() {
       {state.status === "loading" && (
         <div className="report-section__body">
           <p className="report-section__status">Loading scroll depth summary…</p>
-          <ScrollDepthTableSkeleton />
+          <DepthChartSkeleton />
+          <div className="report-section__divider">
+            <ScrollDepthTableSkeleton />
+          </div>
         </div>
       )}
 
@@ -179,7 +202,7 @@ export function ScrollDepthSummary() {
 
       {state.status === "success" && state.report.items.length > 0 && (
         <div className="report-section__body">
-          <ScrollDepthBarChart items={state.report.items} />
+          <ScrollDepthDistributionChart items={state.report.items} />
           <div className="report-section__divider">
             <ScrollDepthTable items={state.report.items} />
           </div>

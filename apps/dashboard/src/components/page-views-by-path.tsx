@@ -12,6 +12,22 @@ type LoadState =
   | { status: "error" }
   | { status: "success"; report: PageViewsByPathReport };
 
+function BarChartSkeleton({ rows = 3 }: { rows?: number }) {
+  return (
+    <div className="bar-chart bar-chart--skeleton" aria-hidden="true">
+      {Array.from({ length: rows }, (_, index) => (
+        <div key={index} className="bar-chart__row">
+          <div className="skeleton-line skeleton-line--chart-label" />
+          <div className="bar-chart__track bar-chart__track--skeleton">
+            <div className="skeleton-line skeleton-line--chart-bar" />
+          </div>
+          <div className="skeleton-line skeleton-line--chart-value" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function PathTableSkeleton() {
   return (
     <table className="path-table path-table--skeleton" aria-hidden="true">
@@ -71,6 +87,7 @@ function PageViewsBarChart({
 
   return (
     <div className="bar-chart" aria-label="Page views by path chart">
+      <p className="bar-chart__caption">Relative page views by path</p>
       {items.map((item) => {
         const barWidth =
           maxPageViews > 0 ? (item.pageViews / maxPageViews) * 100 : 0;
@@ -81,16 +98,14 @@ function PageViewsBarChart({
             className="bar-chart__row"
             aria-label={`${item.path}: ${item.pageViews} page views`}
           >
-            <div className="bar-chart__label-row">
-              <code className="bar-chart__label">{item.path}</code>
-              <span className="bar-chart__value">{item.pageViews}</span>
-            </div>
+            <code className="bar-chart__label">{item.path}</code>
             <div className="bar-chart__track" aria-hidden="true">
               <div
                 className="bar-chart__bar"
                 style={{ width: `${barWidth}%` }}
               />
             </div>
+            <span className="bar-chart__value">{item.pageViews}</span>
           </div>
         );
       })}
@@ -140,7 +155,10 @@ export function PageViewsByPath() {
       {state.status === "loading" && (
         <div className="report-section__body">
           <p className="report-section__status">Loading page views by path…</p>
-          <PathTableSkeleton />
+          <BarChartSkeleton rows={4} />
+          <div className="report-section__divider">
+            <PathTableSkeleton />
+          </div>
         </div>
       )}
 

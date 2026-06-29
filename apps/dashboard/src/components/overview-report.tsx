@@ -70,17 +70,41 @@ function MetricCardsSkeleton() {
 }
 
 function MetricCards({ totals }: { totals: OverviewTotals }) {
+  const totalEvents =
+    totals.pageViews +
+    totals.clicks +
+    totals.scrollDepthEvents +
+    totals.conversions;
+
   return (
     <div className="metric-grid">
-      {METRIC_CARDS.map((card) => (
-        <article key={card.key} className="metric-grid__item">
-          <p className="metric-grid__label">{card.label}</p>
-          <p className="metric-grid__value">
-            {formatMetricValue(totals[card.key])}
-          </p>
-          <p className="metric-grid__helper">{card.helper}</p>
-        </article>
-      ))}
+      {METRIC_CARDS.map((card) => {
+        const value = totals[card.key];
+        const shareWidth =
+          totalEvents > 0 ? (value / totalEvents) * 100 : 0;
+
+        return (
+          <article key={card.key} className="metric-grid__item">
+            <p className="metric-grid__label">{card.label}</p>
+            <p className="metric-grid__value">
+              {formatMetricValue(value)}
+            </p>
+            {totalEvents > 0 && (
+              <div
+                className="metric-grid__meter"
+                aria-hidden="true"
+                title={`${shareWidth.toFixed(0)}% of recorded events`}
+              >
+                <div
+                  className="metric-grid__meter-bar"
+                  style={{ width: `${shareWidth}%` }}
+                />
+              </div>
+            )}
+            <p className="metric-grid__helper">{card.helper}</p>
+          </article>
+        );
+      })}
     </div>
   );
 }
