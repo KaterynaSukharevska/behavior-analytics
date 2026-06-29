@@ -28,6 +28,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         </div>
 
         <nav className="dashboard__nav" aria-label="Report sections">
+          <p className="dashboard__nav-heading">Reports</p>
           <ul className="dashboard__nav-list">
             {NAV_ITEMS.map((item) => (
               <li key={item.href}>

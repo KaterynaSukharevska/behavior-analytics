@@ -27,10 +27,10 @@ Use descriptive, stable filenames. PNG is fine for UI clarity; WebP is optional 
 
 | Category | Filename | What to show |
 |----------|----------|--------------|
-| Dashboard — overview | `dashboard-overview-local-demo.png` | Metric cards at http://localhost:3000 after demo data exists |
-| Dashboard — page views | `dashboard-page-views-local-demo.png` | Page views by path (CSS bars + table) |
-| Dashboard — interactions | `dashboard-interactions-local-demo.png` | Top clicked `data-analytics-id` values and explicit conversions |
-| Dashboard — scroll depth | `dashboard-scroll-depth-local-demo.png` | Scroll milestone chart and table |
+| Dashboard — overview | `dashboard-overview-local-demo.png` | Sidebar + overview metrics at http://localhost:3000 after demo data exists |
+| Dashboard — page views | `dashboard-page-views-local-demo.png` | Page views by path (CSS bar chart + table) |
+| Dashboard — interactions | `dashboard-interactions-local-demo.png` | Click/conversion bar charts and tables for tracked `data-analytics-id` values |
+| Dashboard — scroll depth | `dashboard-scroll-depth-local-demo.png` | Scroll milestone distribution chart and table |
 | Demo site | `demo-site-home-local-demo.png` | Demo site UI (e.g. home) with safe `data-analytics-id` visible where useful |
 | Ingest API health | `ingest-api-health-local-demo.png` | http://localhost:4000/api/health JSON (`ok`, `service`) |
 
@@ -85,6 +85,20 @@ When you caption or embed these images:
 - **10.1** — folder path, naming, and privacy rules (guide only).
 - **10.2** — six required PNG files captured from localhost (see table above).
 - **10.3** — three captures embedded in root README **Demo Screenshots** section; three additional PNGs in this folder remain available for interviews and fallback.
+- **12.5** — Phase 12 dashboard visual upgrade (sidebar shell, simplified reports, CSS-only charts). When recapturing dashboard PNGs, include the **left sidebar**, **Reports** header, and **real chart visuals** from a local demo session. Existing Phase 10 files may show the pre–Phase 12 layout until manually replaced.
+
+### Phase 12 dashboard capture notes
+
+For updated portfolio screenshots after the Phase 12 UI work:
+
+| Shot | Framing tips |
+|------|----------------|
+| Overview | Sidebar visible; overview metric grid with proportion meters; real `demo-site` totals |
+| Page views | Horizontal bar chart plus table; scroll or crop so chart labels are readable |
+| Interactions | Clicks and conversions bar charts (and tables); both columns if width allows |
+| Scroll depth | Milestone distribution chart plus table |
+
+Use the same privacy and honesty rules as Phase 10. Regenerate demo data on the demo site before capture — do not edit metrics in an image editor.
 
 ## Related documentation
 
