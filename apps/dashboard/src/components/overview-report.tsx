@@ -55,9 +55,12 @@ function isEmptyTotals(totals: OverviewTotals): boolean {
 
 function MetricCardsSkeleton() {
   return (
-    <div className="metric-cards" aria-hidden="true">
+    <div className="metric-grid" aria-hidden="true">
       {METRIC_CARDS.map((card) => (
-        <article key={card.key} className="metric-card metric-card--skeleton">
+        <article
+          key={card.key}
+          className="metric-grid__item metric-grid__item--skeleton"
+        >
           <div className="skeleton-line skeleton-line--label" />
           <div className="skeleton-line skeleton-line--value" />
         </article>
@@ -68,14 +71,14 @@ function MetricCardsSkeleton() {
 
 function MetricCards({ totals }: { totals: OverviewTotals }) {
   return (
-    <div className="metric-cards">
+    <div className="metric-grid">
       {METRIC_CARDS.map((card) => (
-        <article key={card.key} className="metric-card">
-          <h3 className="metric-card__label">{card.label}</h3>
-          <p className="metric-card__value">
+        <article key={card.key} className="metric-grid__item">
+          <p className="metric-grid__label">{card.label}</p>
+          <p className="metric-grid__value">
             {formatMetricValue(totals[card.key])}
           </p>
-          <p className="metric-card__helper">{card.helper}</p>
+          <p className="metric-grid__helper">{card.helper}</p>
         </article>
       ))}
     </div>
@@ -113,27 +116,28 @@ export function OverviewReport() {
   }, []);
 
   return (
-    <section className="metrics-panel" aria-label="Demo site metrics">
-      <header className="metrics-panel__header">
-        <p className="metrics-panel__eyebrow">Overview</p>
-        <h2>Demo site activity</h2>
-        <p>
-          Current totals for behavior analytics collected from the demo site (
-          {DEMO_SITE_ID}). Browse{" "}
-          <a href="http://localhost:3001">localhost:3001</a> to generate new
-          events.
+    <section className="report-section" aria-label="Overview">
+      <header className="report-section__header">
+        <h2>Overview</h2>
+        <p className="report-section__lead">
+          Totals for <code>{DEMO_SITE_ID}</code>. Browse{" "}
+          <a href="http://localhost:3001">localhost:3001</a> to generate
+          events, then refresh.
         </p>
       </header>
 
       {state.status === "loading" && (
-        <>
-          <p className="metrics-panel__status">Loading metrics…</p>
+        <div className="report-section__body">
+          <p className="report-section__status">Loading metrics…</p>
           <MetricCardsSkeleton />
-        </>
+        </div>
       )}
 
       {state.status === "error" && (
-        <div className="metrics-panel__alert metrics-panel__alert--error" role="alert">
+        <div
+          className="report-section__alert report-section__alert--error"
+          role="alert"
+        >
           <p>
             We could not load metrics right now. Make sure the ingest API is
             running, then refresh this page.
@@ -142,17 +146,18 @@ export function OverviewReport() {
       )}
 
       {state.status === "success" && isEmptyTotals(state.report.totals) && (
-        <div className="metrics-panel__alert metrics-panel__alert--info">
+        <div className="report-section__alert report-section__alert--info">
           <p>
-            No events yet for the demo site. Open the demo site, visit a few
-            pages, click a CTA, scroll, and try a conversion — totals will
-            appear here after data is ingested.
+            No events yet. Visit pages, click tracked CTAs, scroll, and try a
+            conversion on the demo site.
           </p>
         </div>
       )}
 
       {state.status === "success" && (
-        <MetricCards totals={state.report.totals} />
+        <div className="report-section__body">
+          <MetricCards totals={state.report.totals} />
+        </div>
       )}
     </section>
   );

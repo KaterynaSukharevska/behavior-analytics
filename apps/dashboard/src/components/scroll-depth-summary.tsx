@@ -140,28 +140,25 @@ export function ScrollDepthSummary() {
   }, []);
 
   return (
-    <section className="metrics-panel" aria-label="Scroll depth summary">
-      <header className="metrics-panel__header">
-        <p className="metrics-panel__eyebrow">Scroll</p>
+    <section className="report-section" aria-label="Scroll depth summary">
+      <header className="report-section__header">
         <h2>Scroll depth summary</h2>
-        <p>
-          Scroll milestones reached on the demo site ({DEMO_SITE_ID}). Scroll
-          through a long page on{" "}
-          <a href="http://localhost:3001">localhost:3001</a> to trigger 25%,
-          50%, 75%, and 100% depth events.
+        <p className="report-section__lead">
+          Milestones at 25–100% for <code>{DEMO_SITE_ID}</code>. Scroll a long
+          page on <a href="http://localhost:3001">localhost:3001</a>.
         </p>
       </header>
 
       {state.status === "loading" && (
-        <>
-          <p className="metrics-panel__status">Loading scroll depth summary…</p>
+        <div className="report-section__body">
+          <p className="report-section__status">Loading scroll depth summary…</p>
           <ScrollDepthTableSkeleton />
-        </>
+        </div>
       )}
 
       {state.status === "error" && (
         <div
-          className="metrics-panel__alert metrics-panel__alert--error"
+          className="report-section__alert report-section__alert--error"
           role="alert"
         >
           <p>
@@ -172,20 +169,21 @@ export function ScrollDepthSummary() {
       )}
 
       {state.status === "success" && state.report.items.length === 0 && (
-        <div className="metrics-panel__alert metrics-panel__alert--info">
+        <div className="report-section__alert report-section__alert--info">
           <p>
-            No scroll depth events recorded yet. Open the demo site and scroll
-            through a page — milestones will appear here after scroll_depth
-            events are ingested.
+            No scroll depth events recorded yet. Scroll through a demo site page
+            to trigger milestone events.
           </p>
         </div>
       )}
 
       {state.status === "success" && state.report.items.length > 0 && (
-        <>
+        <div className="report-section__body">
           <ScrollDepthBarChart items={state.report.items} />
-          <ScrollDepthTable items={state.report.items} />
-        </>
+          <div className="report-section__divider">
+            <ScrollDepthTable items={state.report.items} />
+          </div>
+        </div>
       )}
     </section>
   );

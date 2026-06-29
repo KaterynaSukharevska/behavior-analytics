@@ -129,26 +129,24 @@ export function PageViewsByPath() {
   }, []);
 
   return (
-    <section className="metrics-panel" aria-label="Page views by path">
-      <header className="metrics-panel__header">
-        <p className="metrics-panel__eyebrow">Traffic</p>
+    <section className="report-section" aria-label="Page views by path">
+      <header className="report-section__header">
         <h2>Page views by path</h2>
-        <p>
-          Top paths ranked by page views for the demo site ({DEMO_SITE_ID}), up
-          to the ten most viewed paths.
+        <p className="report-section__lead">
+          Top paths for <code>{DEMO_SITE_ID}</code>, up to ten entries.
         </p>
       </header>
 
       {state.status === "loading" && (
-        <>
-          <p className="metrics-panel__status">Loading page views by path…</p>
+        <div className="report-section__body">
+          <p className="report-section__status">Loading page views by path…</p>
           <PathTableSkeleton />
-        </>
+        </div>
       )}
 
       {state.status === "error" && (
         <div
-          className="metrics-panel__alert metrics-panel__alert--error"
+          className="report-section__alert report-section__alert--error"
           role="alert"
         >
           <p>
@@ -159,19 +157,21 @@ export function PageViewsByPath() {
       )}
 
       {state.status === "success" && state.report.items.length === 0 && (
-        <div className="metrics-panel__alert metrics-panel__alert--info">
+        <div className="report-section__alert report-section__alert--info">
           <p>
-            No page views recorded yet. Open the demo site and visit a few pages
-            — paths will appear here after page_view events are ingested.
+            No page views recorded yet. Visit a few pages on the demo site to
+            generate page_view events.
           </p>
         </div>
       )}
 
       {state.status === "success" && state.report.items.length > 0 && (
-        <>
+        <div className="report-section__body">
           <PageViewsBarChart items={state.report.items} />
-          <PathTable items={state.report.items} />
-        </>
+          <div className="report-section__divider">
+            <PathTable items={state.report.items} />
+          </div>
+        </div>
       )}
     </section>
   );

@@ -128,39 +128,34 @@ export function InteractionsSummary() {
   }, []);
 
   return (
-    <section
-      className="metrics-panel metrics-panel--wide"
-      aria-label="Interactions summary"
-    >
-      <header className="metrics-panel__header">
-        <p className="metrics-panel__eyebrow">Engagement</p>
+    <section className="report-section" aria-label="Interactions summary">
+      <header className="report-section__header">
         <h2>Interactions summary</h2>
-        <p>
-          Top clicked elements and conversions for the demo site ({DEMO_SITE_ID}
-          ). Click CTAs with <code>data-analytics-id</code> or trigger
-          conversion events on the demo site to populate this section.
+        <p className="report-section__lead">
+          Top clicks and conversions for <code>{DEMO_SITE_ID}</code>. Clicks use{" "}
+          <code>data-analytics-id</code>.
         </p>
       </header>
 
       {state.status === "loading" && (
-        <>
-          <p className="metrics-panel__status">Loading interactions summary…</p>
-          <div className="interactions-summary__sections">
-            <div className="interactions-summary__subsection">
+        <div className="report-section__body">
+          <p className="report-section__status">Loading interactions summary…</p>
+          <div className="report-section__split">
+            <div className="report-block">
               <h3>Top clicked elements</h3>
               <InteractionsTableSkeleton firstColumnLabel="Element ID" />
             </div>
-            <div className="interactions-summary__subsection">
+            <div className="report-block">
               <h3>Conversions</h3>
               <InteractionsTableSkeleton firstColumnLabel="Conversion name" />
             </div>
           </div>
-        </>
+        </div>
       )}
 
       {state.status === "error" && (
         <div
-          className="metrics-panel__alert metrics-panel__alert--error"
+          className="report-section__alert report-section__alert--error"
           role="alert"
         >
           <p>
@@ -171,37 +166,36 @@ export function InteractionsSummary() {
       )}
 
       {state.status === "success" && isEmptySummary(state.report) && (
-        <div className="metrics-panel__alert metrics-panel__alert--info">
+        <div className="report-section__alert report-section__alert--info">
           <p>
-            No clicks or conversions recorded yet. Open the demo site, click
-            tracked elements, and try a conversion — interactions will appear
-            here after events are ingested.
+            No clicks or conversions recorded yet. Click tracked elements or
+            trigger conversions on the demo site.
           </p>
         </div>
       )}
 
       {state.status === "success" && !isEmptySummary(state.report) && (
-        <div className="interactions-summary__sections">
-          <div className="interactions-summary__subsection">
-            <h3>Top clicked elements</h3>
-            {state.report.clicks.length === 0 ? (
-              <p className="interactions-summary__empty">
-                No click events with an element ID yet.
-              </p>
-            ) : (
-              <ClicksTable items={state.report.clicks} />
-            )}
-          </div>
+        <div className="report-section__body">
+          <div className="report-section__split">
+            <div className="report-block">
+              <h3>Top clicked elements</h3>
+              {state.report.clicks.length === 0 ? (
+                <p className="report-block__empty">
+                  No click events with an element ID yet.
+                </p>
+              ) : (
+                <ClicksTable items={state.report.clicks} />
+              )}
+            </div>
 
-          <div className="interactions-summary__subsection">
-            <h3>Conversions</h3>
-            {state.report.conversions.length === 0 ? (
-              <p className="interactions-summary__empty">
-                No conversion events yet.
-              </p>
-            ) : (
-              <ConversionsTable items={state.report.conversions} />
-            )}
+            <div className="report-block">
+              <h3>Conversions</h3>
+              {state.report.conversions.length === 0 ? (
+                <p className="report-block__empty">No conversion events yet.</p>
+              ) : (
+                <ConversionsTable items={state.report.conversions} />
+              )}
+            </div>
           </div>
         </div>
       )}
