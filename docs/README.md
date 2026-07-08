@@ -31,6 +31,7 @@ Behavior Analytics MVP is a local-first portfolio project with:
 - [`portfolio/phase-11-final-review-notes.md`](portfolio/phase-11-final-review-notes.md) — **Phase 11.1 review outcomes** — checklist results, pass/needs-fix notes, follow-ups
 - [`portfolio/phase-11-demo-rehearsal-notes.md`](portfolio/phase-11-demo-rehearsal-notes.md) — **Phase 11.2 demo rehearsal** — tab order, 5/10-min flows, talking points, friction
 - [`portfolio/phase-11-closure-summary.md`](portfolio/phase-11-closure-summary.md) — **Phase 11 closure** — final readiness decision and honest limitations
+- [`portfolio/phase-12-dashboard-visual-upgrade-summary.md`](portfolio/phase-12-dashboard-visual-upgrade-summary.md) — **Phase 12 closure** — optional dashboard visual upgrade summary
 - [`portfolio/project-post-draft.md`](portfolio/project-post-draft.md) — optional LinkedIn / GitHub post copy (honest local MVP framing; not auto-published)
 - [`portfolio/demo-day-fallback-script.md`](portfolio/demo-day-fallback-script.md) — 2-3 minute fallback narrative when live demo is unavailable
 - [`ai/cursor-working-rules.md`](ai/cursor-working-rules.md) — short working rules for Cursor agents
@@ -95,6 +96,7 @@ Some product docs include future concepts such as users/workspaces/projects. The
 - [`portfolio/phase-11-final-review-notes.md`](portfolio/phase-11-final-review-notes.md) — Phase 11.1 recorded review notes and follow-up candidates
 - [`portfolio/phase-11-demo-rehearsal-notes.md`](portfolio/phase-11-demo-rehearsal-notes.md) — Phase 11.2 live demo rehearsal notes and interview flow
 - [`portfolio/phase-11-closure-summary.md`](portfolio/phase-11-closure-summary.md) — Phase 11.5 final closure and portfolio readiness decision
+- [`portfolio/phase-12-dashboard-visual-upgrade-summary.md`](portfolio/phase-12-dashboard-visual-upgrade-summary.md) — Phase 12 closure — optional dashboard visual upgrade summary
 - [`portfolio/project-post-draft.md`](portfolio/project-post-draft.md) — draft LinkedIn and GitHub/repository update posts (adapt before publishing)
 - [`portfolio/demo-day-fallback-script.md`](portfolio/demo-day-fallback-script.md) — calm fallback script for interviews when local services are unavailable
 

@@ -246,6 +246,7 @@ Use these for GitHub visitors, recruiters, and technical interviews (details sta
 | [`phase-11-final-review-notes.md`](docs/portfolio/phase-11-final-review-notes.md) | Phase 11.1 portfolio review outcomes |
 | [`phase-11-demo-rehearsal-notes.md`](docs/portfolio/phase-11-demo-rehearsal-notes.md) | Phase 11.2 interview demo rehearsal flow |
 | [`phase-11-closure-summary.md`](docs/portfolio/phase-11-closure-summary.md) | Phase 11 closure — final portfolio readiness decision |
+| [`phase-12-dashboard-visual-upgrade-summary.md`](docs/portfolio/phase-12-dashboard-visual-upgrade-summary.md) | Phase 12 closure — optional dashboard visual upgrade |
 
 Full docs index: [`docs/README.md`](docs/README.md).
 
