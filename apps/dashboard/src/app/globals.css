@@ -129,6 +129,7 @@ body {
   color: var(--color-muted);
   font-size: 0.75rem;
   line-height: 1.45;
+  flex-shrink: 0;
 }
 
 .dashboard__main {
@@ -750,6 +751,11 @@ body {
     position: sticky;
     top: 0;
     height: 100vh;
+    padding-bottom: 4rem;
+  }
+
+  .dashboard__sidebar-note {
+    padding-bottom: 0.25rem;
   }
 }
 
