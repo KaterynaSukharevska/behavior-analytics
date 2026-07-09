@@ -62,9 +62,9 @@ REST-first, beginner-readable architecture. See [`docs/architecture/data-flow.en
 
 This local demo shows the implemented flow from demo-site tracking events into the ingest API, PostgreSQL, reporting API, and dashboard UI. The images below are **portfolio evidence from a real `localhost` run** — not production deployment, not customer data, and not edited metrics.
 
-| Dashboard overview | Page views by path | Demo site home |
+| Dashboard overview & page views | Interactions report | Scroll depth & privacy |
 |--------------------|--------------------|----------------|
-| ![Behavior Analytics local demo dashboard overview](docs/assets/screenshots/dashboard-overview-local-demo.png) | ![Behavior Analytics local demo page views report](docs/assets/screenshots/dashboard-page-views-local-demo.png) | ![Behavior Analytics local demo site used to generate tracker events](docs/assets/screenshots/demo-site-home-local-demo.png) |
+| ![Behavior Analytics Phase 12 dashboard overview and page views](docs/assets/screenshots/dashboard-phase-12-overview-pageviews.png) | ![Behavior Analytics Phase 12 interactions report](docs/assets/screenshots/dashboard-phase-12-interactions.png) | ![Behavior Analytics Phase 12 scroll depth and privacy report](docs/assets/screenshots/dashboard-phase-12-scroll-depth.png) |
 
 More captures and naming rules: [`docs/assets/screenshots/README.md`](docs/assets/screenshots/README.md). Capture guidance: [`docs/portfolio/demo-screenshots-plan.md`](docs/portfolio/demo-screenshots-plan.md).
 
